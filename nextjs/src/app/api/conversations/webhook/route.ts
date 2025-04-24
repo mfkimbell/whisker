@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { optInUserSms, findUserByPhone } from '@/lib/db';
+import { findUserByPhone, optInUserSms } from '@/lib/db';
 import { segment } from '@/lib/segment-server';
 import Twilio from 'twilio';
 
@@ -46,9 +46,6 @@ export async function POST(req: NextRequest) {
       event: 'SMS Opt-In (WhatsApp)',
     });
 
-    console.log('📬 Segment identify/track complete');
-
-    // 💬 Send reward message into conversation
     if (user.conversationSid) {
       const body = `🎉 Thanks for signing up, ${user.email || 'friend'}! Here's a free code: *WHISKER100* 🐾`;
 
@@ -60,7 +57,7 @@ export async function POST(req: NextRequest) {
           body,
         });
 
-      console.log(`📤 Sent confirmation reward message to conversation ${user.conversationSid}`);
+      console.log(`📤 Sent confirmation message to conversation ${user.conversationSid}`);
     } else {
       console.warn('⚠️ No conversationSid found for user');
     }
