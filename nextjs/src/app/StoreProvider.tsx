@@ -8,40 +8,46 @@ import type { RootState } from '@/lib/store';
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
   const storeRef = useRef<AppStore | null>(null);
   if (!storeRef.current) {
-    // Create the store instance the first time this renders
     storeRef.current = makeStore();
   }
   const store = storeRef.current;
 
   useEffect(() => {
-    // 1) Hydrate from localStorage on client mount
+    // Hydrate from localStorage
     const storedId = localStorage.getItem('userId');
     const storedPhone = localStorage.getItem('phone');
     const storedName = localStorage.getItem('name');
+    const storedConversationId = localStorage.getItem('conversationId');
+
     if (storedId && storedPhone && storedName) {
       console.log('Grabbing User from Local Storage');
-      store.dispatch(setUser({ userId: storedId, phone: storedPhone, name: storedName }));
+      store.dispatch(
+        setUser({
+          userId: storedId,
+          phone: storedPhone,
+          name: storedName,
+          conversationId: storedConversationId ?? undefined,
+        }),
+      );
     }
 
-    // 2) Subscribe to save auth state on every change
+    // Subscribe to store changes
     const unsubscribe = store.subscribe(() => {
-      const { userId, phone, name } = (store.getState() as RootState).auth;
+      const { userId, phone, name, conversationId } = (store.getState() as RootState).auth;
 
-      if (userId || phone || name) {
-        // save only if there's something to save
-        if (userId) localStorage.setItem('userId', userId);
-        else localStorage.removeItem('userId');
-
-        if (phone) localStorage.setItem('phone', phone);
-        else localStorage.removeItem('phone');
-
-        if (name) localStorage.setItem('name', name);
-        else localStorage.removeItem('name');
+      if (userId || phone || name || conversationId) {
+        userId ? localStorage.setItem('userId', userId) : localStorage.removeItem('userId');
+        phone ? localStorage.setItem('phone', phone) : localStorage.removeItem('phone');
+        name ? localStorage.setItem('name', name) : localStorage.removeItem('name');
+        conversationId
+          ? localStorage.setItem('conversationId', conversationId)
+          : localStorage.removeItem('conversationId');
       } else {
-        // truly logged out: both are gone
         localStorage.removeItem('userId');
         localStorage.removeItem('phone');
-        console.log('Removing local storage'); // ✅ This will now show up
+        localStorage.removeItem('name');
+        localStorage.removeItem('conversationId');
+        console.log('Removing local storage');
       }
     });
 

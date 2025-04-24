@@ -52,7 +52,7 @@ export default function VerifyPage() {
     const res = await fetch('/api/verify/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, code }),
+      body: JSON.stringify({ phone, code, userId }),
     });
 
     if (res.ok) {
