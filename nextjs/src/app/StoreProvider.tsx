@@ -36,12 +36,29 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
       const { userId, phone, name, conversationId } = (store.getState() as RootState).auth;
 
       if (userId || phone || name || conversationId) {
-        userId ? localStorage.setItem('userId', userId) : localStorage.removeItem('userId');
-        phone ? localStorage.setItem('phone', phone) : localStorage.removeItem('phone');
-        name ? localStorage.setItem('name', name) : localStorage.removeItem('name');
-        conversationId
-          ? localStorage.setItem('conversationId', conversationId)
-          : localStorage.removeItem('conversationId');
+        if (userId) {
+          localStorage.setItem('userId', userId);
+        } else {
+          localStorage.removeItem('userId');
+        }
+
+        if (phone) {
+          localStorage.setItem('phone', phone);
+        } else {
+          localStorage.removeItem('phone');
+        }
+
+        if (name) {
+          localStorage.setItem('name', name);
+        } else {
+          localStorage.removeItem('name');
+        }
+
+        if (conversationId) {
+          localStorage.setItem('conversationId', conversationId);
+        } else {
+          localStorage.removeItem('conversationId');
+        }
       } else {
         localStorage.removeItem('userId');
         localStorage.removeItem('phone');
@@ -54,5 +71,5 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
     return unsubscribe;
   }, [store]);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return <Provider store={store}>{children}</Provider>;
 }
