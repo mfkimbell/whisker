@@ -6,7 +6,8 @@ const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_T
 
 const mitch = '+12053128982';
 
-export async function POST(req: NextRequest) {
+//removed req: NextRequest
+export async function POST() {
   await client.verify.v2
     .services(process.env.TWILIO_VERIFY_SERVICE_SID!)
     .verifications.create({ to: mitch, channel: 'sms' });
