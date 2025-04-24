@@ -9,7 +9,7 @@ export type User = {
   conversationSid?: string; // <— new
 };
 
-const users = new Map<string, User>();
+export const users = new Map<string, User>();
 
 export function createUser(u: User) {
   users.set(u.id, u);

@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import Twilio from 'twilio';
+import { setConversationSid, users } from '@/lib/db';
 
 const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
 
@@ -59,6 +60,10 @@ export async function POST(req: NextRequest) {
   });
   const convSid = conv.sid;
   console.log('✅ Created new conversation', convSid);
+  // ...
+  setConversationSid(userId, convSid);
+  console.log('🗄️ [verify] DB after setConversationSid:', Array.from(users.values()));
+  // ...
 
   // 4) Add WhatsApp participant
   try {
