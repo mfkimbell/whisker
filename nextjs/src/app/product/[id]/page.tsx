@@ -10,6 +10,7 @@ import { AppDispatch } from '@/lib/store';
 import { v4 as uuidv4 } from 'uuid';
 
 // Mock catalog
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const catalog: Record<string, any> = {
   prod1: { id: 'prod1', name: 'Kitten Starter Kit', category: 'Care', price: 49 },
   prod2: { id: 'prod2', name: 'Auto Feeder Pro', category: 'Care', price: 149 },

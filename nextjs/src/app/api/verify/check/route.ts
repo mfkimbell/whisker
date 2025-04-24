@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       try {
         await client.conversations.v1.services(CONV_SID).conversations(conv.sid).remove();
         console.log(`🗑️ Deleted conversation ${conv.sid}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         console.warn(`⚠️ Failed to delete ${conv.sid}:`, e.message);
       }
@@ -66,6 +67,7 @@ export async function POST(req: NextRequest) {
       'messagingBinding.proxyAddress': FROM_WHATSAPP,
     });
     console.log('✅ WhatsApp participant added');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     // shouldn’t happen now, but just in case
     if (e.code === 50416) {

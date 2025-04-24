@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { analytics } from '@/lib/segment';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const posts: Record<string, any> = {
   'kitten-care': { id: 'post1', title: 'Kitten Care 101', category: 'Adoption' },
   'cat-nutrition': { id: 'post2', title: 'Cat Nutrition Hacks', category: 'Care' },
