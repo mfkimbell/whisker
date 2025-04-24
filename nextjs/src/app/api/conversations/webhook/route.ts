@@ -8,7 +8,7 @@ const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_T
 const CONV_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
 const WHISKER_BOT = 'WhiskerAI';
 
-export const runtime = 'nodejs'; // export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   const bodyText = await req.text();
