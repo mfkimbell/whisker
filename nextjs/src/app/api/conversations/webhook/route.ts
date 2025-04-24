@@ -38,12 +38,20 @@ export async function POST(req: NextRequest) {
       .conversations(conv.sid)
       .participants.list({ limit: 50 });
 
-    if (parts.some((p) => p.messagingBinding?.address === TO_WHATSAPP)) {
+    // convert to a properly typed check
+    const hasWhatsApp = parts.some((p) => {
+      // step 1: grab the raw address value
+      const rawAddr = (p.messagingBinding as any)?.address;
+      // step 2: make sure it’s a string, then compare
+      return typeof rawAddr === 'string' && rawAddr === TO_WHATSAPP;
+    });
+
+    if (hasWhatsApp) {
       try {
         await client.conversations.v1.services(CONV_SID).conversations(conv.sid).remove();
         console.log(`🗑️ Deleted conversation ${conv.sid}`);
-      } catch (e: any) {
-        console.warn(`⚠️ Failed to delete conversation ${conv.sid}:`, e.message);
+      } catch (err: any) {
+        console.warn(`⚠️ Failed to delete ${conv.sid}:`, err.message);
       }
     }
   }
@@ -63,6 +71,7 @@ export async function POST(req: NextRequest) {
       'messagingBinding.proxyAddress': FROM_WHATSAPP,
     });
     console.log('✅ WhatsApp participant added');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     if (e.code === 50416) {
       console.log('ℹ️ Binding already existed, skipping');
