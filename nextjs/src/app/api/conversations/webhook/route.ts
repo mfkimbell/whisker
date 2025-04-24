@@ -2,81 +2,72 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import Twilio from 'twilio';
-import { findUserByPhone } from '@/lib/db';
+import { findUserByPhone, optInUserSms } from '@/lib/db';
 import { segment } from '@/lib/segment-server';
 
 const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
-const CONV_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
-const BOT = 'WhiskerAI';
+
+const CONV_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
+const BOT_IDENTITY = 'WhiskerAI';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
-  // 1) Read the raw body as text (Twilio sends form-urlencoded)
-  const bodyText = await req.text();
-  const params = new URLSearchParams(bodyText);
+  // 1) Parse form-encoded body
+  const text = await req.text();
+  const params = new URLSearchParams(text);
 
-  // 2) Extract the key fields
-  // For a Conversations webhook (post-webhook), Twilio still posts form-encoded:
-  const eventType = params.get('EventType');
-  const convSid = params.get('ConversationSid');
-  const author = params.get('Author');
-  const messageBody = params.get('Body')?.trim();
+  const rawFrom = params.get('From'); // e.g. "whatsapp:+12053128982"
+  const messageBody = params.get('Body')?.trim(); // e.g. "YES"
 
-  console.log('📨 Twilio Webhook', { eventType, convSid, author, messageBody });
+  console.log('📨 Sandbox inbound', { rawFrom, messageBody });
 
-  // 3) Only handle incoming user messages
-  if (
-    eventType === 'onMessageAdded' &&
-    author !== BOT &&
-    messageBody?.toUpperCase() === 'YES' &&
-    convSid
-  ) {
-    // 4) Lookup user by conversation attributes
-    const conv = await client.conversations.v1.services(CONV_SID).conversations(convSid).fetch();
+  if (!rawFrom || !messageBody) {
+    console.warn('⚠️ Missing From or Body—skipping.');
+    return NextResponse.json({}, { status: 200 });
+  }
 
-    let userId: string | undefined;
-    try {
-      const attrs = JSON.parse(conv.attributes || '{}');
-      userId = attrs.userId as string;
-    } catch {
-      console.warn('⚠️ Could not parse conversation.attributes:', conv.attributes);
-    }
+  // 2) Only care about YES replies
+  if (messageBody.toUpperCase() !== 'YES') {
+    console.log(`ℹ️ Ignored message: "${messageBody}"`);
+    return NextResponse.json({}, { status: 200 });
+  }
 
-    if (!userId) {
-      console.warn('⚠️ No userId found in attributes; skipping');
-      return NextResponse.json({}, { status: 200 });
-    }
+  // 3) Normalize the WhatsApp phone and find the user
+  const phone = rawFrom.replace(/^whatsapp:/, '').replace(/\D/g, '');
+  console.log(`🔍 Looking up user by phone: ${phone}`);
+  const user = findUserByPhone(phone);
 
-    // 5) Flip the in-mem smsOptIn flag
-    const user = findUserByPhone(params.get('Author')!.replace('whatsapp:', ''));
-    if (!user) {
-      console.warn('⚠️ No user found for phone', params.get('Author'));
-      return NextResponse.json({}, { status: 200 });
-    }
-    user.smsOptIn = true;
-    console.log(`✅ User ${user.id} opted in`);
+  if (!user) {
+    console.warn(`❌ No user found for phone ${phone}`);
+    return NextResponse.json({}, { status: 200 });
+  }
 
-    // 6) Send Segment identify + track
-    await segment.identify({ userId, traits: { smsOptIn: true } });
-    await segment.track({ userId, event: 'SMS Opt-In' });
-    console.log('📈 Segment updated');
+  // 4) Flip their opt-in flag and update Segment
+  optInUserSms(user.id);
+  console.log(`✅ Opted in user ${user.id}`);
 
-    // 7) Send reward message into the conversation
-    try {
-      const msg = await client.conversations.v1
-        .services(CONV_SID)
-        .conversations(convSid)
-        .messages.create({
-          author: BOT,
-          body: `🎉 Thanks for signing up! Here’s your free code: WHISKER100 🐾`,
-        });
-      console.log('📤 Reward message sent, SID:', msg.sid);
-    } catch (err) {
-      console.error('❌ Failed to send reward message:', err);
-    }
-  } else {
-    console.log('ℹ️ Ignored webhook event or non-YES message');
+  await segment.identify({ userId: user.id, traits: { smsOptIn: true } });
+  await segment.track({ userId: user.id, event: 'SMS Opt-In' });
+  console.log('📈 Segment updated');
+
+  // 5) Send the thank-you message into their Conversation
+  if (!user.conversationSid) {
+    console.warn(`⚠️ No conversationSid for user ${user.id}`);
+    return NextResponse.json({}, { status: 200 });
+  }
+
+  try {
+    const msg = await client.conversations.v1
+      .services(CONV_SERVICE_SID)
+      .conversations(user.conversationSid)
+      .messages.create({
+        author: BOT_IDENTITY,
+        body: '🎉 Thanks for signing up! Here’s your free code: *WHISKER100* 🐾',
+      });
+    console.log(`📤 Sent reward message (SID: ${msg.sid})`);
+  } catch (err) {
+    console.error('❌ Failed to send reward message:', err);
   }
 
   return NextResponse.json({}, { status: 200 });
