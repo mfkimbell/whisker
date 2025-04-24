@@ -1,11 +1,12 @@
-// app/verify/page.tsx
+// src/app/verify/page.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { analytics } from '@/lib/segment';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@/lib/store';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '@/lib/store';
+import { setUser } from '@/lib/slices/authSlice';
 
 export default function VerifyPage() {
   const [code, setCode] = useState('');
@@ -13,12 +14,10 @@ export default function VerifyPage() {
   const [canResend, setCanResend] = useState(false);
   const hasAutoSent = useRef(false);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
 
-  // Pull phone & userId from Redux
-  const phone = useSelector((s: RootState) => s.auth.phone);
-  const userId = useSelector((s: RootState) => s.auth.userId);
+  const { userId, phone, name } = useSelector((s: RootState) => s.auth);
 
-  // Auto‐send once
   useEffect(() => {
     if (!phone || hasAutoSent.current) return;
     hasAutoSent.current = true;
@@ -39,7 +38,7 @@ export default function VerifyPage() {
       setTimeout(() => setCanResend(true), 30_000);
     } catch (err) {
       console.error('Error sending code:', err);
-      alert('Could not send code, please wait and try again.');
+      alert('Could not send code. Please wait and try again.');
     } finally {
       setSending(false);
     }
@@ -47,24 +46,35 @@ export default function VerifyPage() {
 
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
-    if (!phone) return;
+    if (!userId || !phone) {
+      alert('Missing user information.');
+      return;
+    }
 
-    const res = await fetch('/api/verify/check', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, code, userId }),
-    });
+    try {
+      const res = await fetch('/api/verify/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, phone, code }),
+      });
 
-    if (res.ok) {
-      // Mark phoneVerified in Segment
-      if (userId) {
-        analytics.identify(userId, { phoneVerified: true });
-        analytics.track('Phone Verified');
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Invalid code, please try again.');
+        return;
       }
+
+      const { conversationSid } = data;
+
+      analytics.identify(userId, { phoneVerified: true });
+      analytics.track('Phone Verified');
+
+      dispatch(setUser({ userId, phone, name: name ?? '', conversationId: conversationSid }));
+
       router.push('/');
-    } else {
-      const { error } = await res.json();
-      alert(error || 'Invalid code, try again.');
+    } catch (err) {
+      console.error('Verification failed:', err);
+      alert('Something went wrong during verification.');
     }
   }
 

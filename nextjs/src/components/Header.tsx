@@ -1,7 +1,6 @@
-// components/Header.tsx
 'use client';
-import { useHasHydrated } from '@/app/hooks/useHasHydrated';
 
+import { useHasHydrated } from '@/app/hooks/useHasHydrated';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import CartDropdown from './Cart';
 import { clearUser } from '@/lib/slices/authSlice';
 import type { RootState, AppDispatch } from '@/lib/store';
+import Image from 'next/image';
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,14 +16,10 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const hydrated = useHasHydrated();
-
-  // Auth state from Redux
   const { userId, name } = useSelector((s: RootState) => s.auth);
 
-  // Dropdown open state
   const [open, setOpen] = useState(false);
 
-  // Close menu on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (open && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -38,20 +34,13 @@ export default function Header() {
     dispatch(clearUser());
     router.push('/');
   }
-  if (!hydrated) {
-    // prevents flicker
-    return (
-      <header className="pt-5 p-4 h-6 bg-amber-700 text-black flex justify-between">
-        <span className="text-2xl font-bold">Whisker 🐾</span>
-      </header>
-    );
-  }
 
   return (
     <header className="flex items-center justify-between p-4 bg-amber-700 text-black">
+      {/* Left: Logo + Nav */}
       <div className="flex items-center space-x-4">
-        <Link href="/" className="text-2xl font-bold">
-          Whisker 🐾
+        <Link href="/">
+          <Image src="/whisker_white.png" alt="Whisker Logo" width={140} height={40} />
         </Link>
         <nav className="flex items-center space-x-4">
           <Link href="/blog">Blog</Link>
@@ -60,9 +49,9 @@ export default function Header() {
         </nav>
       </div>
 
+      {/* Right: Auth state (hydrated only) */}
       <div className="flex items-center space-x-4">
-        {userId ? (
-          // Profile dropdown when logged in
+        {!hydrated ? null : userId ? (
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setOpen((o) => !o)}
@@ -100,7 +89,6 @@ export default function Header() {
             )}
           </div>
         ) : (
-          // Login link when not logged in
           <Link
             href="/signup"
             className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
