@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     // convert to a properly typed check
     const hasWhatsApp = parts.some((p) => {
       // step 1: grab the raw address value
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const rawAddr = (p.messagingBinding as any)?.address;
       // step 2: make sure it’s a string, then compare
       return typeof rawAddr === 'string' && rawAddr === TO_WHATSAPP;
