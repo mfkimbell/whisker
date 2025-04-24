@@ -1,68 +1,71 @@
-// src/app/api/conversations/webhook/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
-import { findUserByConversationSid, optInUserSms } from '@/lib/db';
+import { optInUserSms, findUserByPhone } from '@/lib/db';
 import { segment } from '@/lib/segment-server';
+import Twilio from 'twilio';
 
-export const runtime = 'edge'; // or 'nodejs' if needed
+const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
+
+const CONV_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
+const WHISKER_BOT = 'WhiskerAI';
+
+export const runtime = 'edge';
 
 export async function POST(req: NextRequest) {
   const bodyText = await req.text();
   const params = new URLSearchParams(bodyText);
 
-  const eventType = params.get('EventType');
-  const convSid = params.get('ConversationSid');
-  const author = params.get('Author');
+  const from = params.get('From')?.replace('whatsapp:', '') ?? null;
   const messageBody = params.get('Body')?.trim();
 
-  console.log('📨 Incoming Twilio Webhook');
-  console.log('🧾 Params:', {
-    eventType,
-    convSid,
-    author,
-    messageBody,
-  });
+  console.log('📨 Incoming WhatsApp Webhook');
+  console.log('🧾 From:', from);
+  console.log('📩 Body:', messageBody);
 
-  if (!eventType || !convSid || !messageBody) {
-    console.warn('⚠️ Missing expected Twilio parameters. Skipping.');
-    return NextResponse.json({}, { status: 200 });
-  }
-
-  if (eventType !== 'onMessageAdded') {
-    console.log(`ℹ️ Ignored non-message event: ${eventType}`);
-    return NextResponse.json({}, { status: 200 });
-  }
-
-  if (author === 'WhiskerAI') {
-    console.log('🤖 Ignored bot message');
+  if (!from || !messageBody) {
+    console.warn('⚠️ Missing required parameters. Skipping.');
     return NextResponse.json({}, { status: 200 });
   }
 
   if (messageBody.toUpperCase() === 'YES') {
-    console.log('✅ Detected YES opt-in');
-
-    const user = findUserByConversationSid(convSid);
+    const user = findUserByPhone(from);
     if (!user) {
-      console.warn(`🚫 No user found for conversation ${convSid}`);
+      console.warn(`⚠️ No user found with phone ${from}`);
       return NextResponse.json({}, { status: 200 });
     }
 
     optInUserSms(user.id);
-    console.log(`📌 Updated smsOptIn for user ${user.id}`);
+    console.log(`✅ User ${user.id} opted in`);
 
     await segment.identify({
       userId: user.id,
       traits: { smsOptIn: true },
     });
-    console.log('📬 Sent Segment identify');
 
     await segment.track({
       userId: user.id,
-      event: 'SMS Opt-In',
+      event: 'SMS Opt-In (WhatsApp)',
     });
-    console.log('📈 Sent Segment track: SMS Opt-In');
+
+    console.log('📬 Segment identify/track complete');
+
+    // 💬 Send reward message into conversation
+    if (user.conversationSid) {
+      const body = `🎉 Thanks for signing up, ${user.email || 'friend'}! Here's a free code: *WHISKER100* 🐾`;
+
+      await client.conversations.v1
+        .services(CONV_SERVICE_SID)
+        .conversations(user.conversationSid)
+        .messages.create({
+          author: WHISKER_BOT,
+          body,
+        });
+
+      console.log(`📤 Sent confirmation reward message to conversation ${user.conversationSid}`);
+    } else {
+      console.warn('⚠️ No conversationSid found for user');
+    }
   } else {
-    console.log(`📭 Received other message from user: ${messageBody}`);
+    console.log(`📭 Received other message: "${messageBody}" from ${from}`);
   }
 
   return NextResponse.json({}, { status: 200 });

@@ -46,3 +46,12 @@ export function optInUserSms(id: string) {
   if (u) u.smsOptIn = true;
   return u;
 }
+
+export function findUserByPhone(phone: string): User | undefined {
+  for (const u of users.values()) {
+    if (u.phone?.replace(/\D/g, '') === phone.replace(/\D/g, '')) {
+      return u;
+    }
+  }
+  return undefined;
+}
