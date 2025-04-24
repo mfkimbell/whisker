@@ -10,6 +10,7 @@ twilio dev-phone
 
 export $(cat .env.local | xargs) && twilio dev-phone
 
+TWILIO_PHONE_NUMBER=+18559224651 # your “from” number
+TWILIO_PROXY_NUMBER=+18777804236 # your user-facing number
 
-TWILIO_PHONE_NUMBER=+18559224651       # your “from” number
-TWILIO_PROXY_NUMBER=+18777804236       # your user-facing number
+#main?
