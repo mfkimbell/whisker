@@ -1,0 +1,22 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String?             // optional e-mail
+  phone           String   @unique    // E.164 phone
+  anonymousId     String?             // from Segment
+  phoneVerified   Boolean  @default(false)
+  smsOptIn        Boolean  @default(false)
+  conversationSid String?             // Twilio Conversation SID
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

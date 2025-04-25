@@ -1,57 +1,18 @@
-// lib/db.ts
-export type User = {
-  id: string;
-  email: string;
-  phone: string;
-  anonymousId?: string;
-  phoneVerified: boolean;
-  smsOptIn: boolean;
-  conversationSid?: string; // <— new
-};
+// src/lib/db.ts
+import { PrismaClient } from '@prisma/client';
 
-export const users = new Map<string, User>();
-
-export function createUser(u: User) {
-  users.set(u.id, u);
-  return u;
+declare global {
+  // Ensure we have a global Prisma instance in dev to avoid exhausting DB connections
+  // due to hot reloading in serverless environments like Next.js API routes
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
 }
 
-export function getUser(id: string): User | undefined {
-  return users.get(id);
+// Create the Prisma client, using a global instance in development
+const client = global.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  global.prisma = client;
 }
 
-export function verifyUserPhone(id: string) {
-  const u = users.get(id);
-  if (u) u.phoneVerified = true;
-  return u;
-}
-
-// <— new: store the Conv SID
-export function setConversationSid(id: string, convSid: string) {
-  const u = users.get(id);
-  if (u) u.conversationSid = convSid;
-  return u;
-}
-
-// <— new: lookup by Conv SID for the webhook
-export function findUserByConversationSid(convSid: string): User | undefined {
-  for (const u of users.values()) {
-    if (u.conversationSid === convSid) return u;
-  }
-  return undefined;
-}
-
-export function optInUserSms(id: string) {
-  const u = users.get(id);
-  if (u) u.smsOptIn = true;
-  return u;
-}
-
-export function findUserByPhone(phone: string): User | undefined {
-  for (const u of users.values()) {
-    if (u.phone?.replace(/\D/g, '') === phone.replace(/\D/g, '')) {
-      return u;
-    }
-  }
-  return undefined;
-}
+export const prisma = client;
