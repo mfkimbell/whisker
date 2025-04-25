@@ -3,6 +3,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
+import { identifyUser } from '@/lib/segment-server';
 
 export async function POST(request: Request) {
   console.log('🔔 /api/conversations/webhook invoked');
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
   const form = new URLSearchParams(raw);
   const incoming = form.get('From'); // e.g. "whatsapp:+12053128982"
   const body = form.get('Body')?.trim();
-  const authorIdentity = form.get('ProfileName') || form.get('ProfileName') || '';
+  const authorIdentity = form.get('ProfileName') || '';
 
   console.log('📑 Parsed fields:', { incoming, body, authorIdentity });
 
@@ -53,6 +54,11 @@ export async function POST(request: Request) {
     } catch (sendErr: any) {
       console.error('❌ sendConversationMessage failed:', sendErr);
     }
+
+    // 3b) Mark smsOptIn in Segment (fire-and-forget)
+    identifyUser(user.id, { smsOptIn: true })
+      .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
+      .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
   }
 
   // 4) Tell Twilio “all good” so it won’t retry
