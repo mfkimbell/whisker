@@ -54,3 +54,6 @@ Thumbs.db
 # Ignore Firebase emulators data
 firebase-debug.log
 firestore-debug.log
+
+prisma/schema.prisma
+prisma/migrations/
