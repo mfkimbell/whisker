@@ -1,57 +1,60 @@
 // src/app/api/conversations/webhook/route.ts
 
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
 import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
 
 export async function POST(request: Request) {
   console.log('🔔 /api/conversations/webhook invoked');
 
-  try {
-    // Log raw body for troubleshooting
-    const rawBody = await request.text();
-    console.log('📥 Raw request body:', rawBody);
+  // 1) Grab raw body & parse
+  const raw = await request.text();
+  console.log('📥 Raw body:', raw);
+  const form = new URLSearchParams(raw);
+  const incoming = form.get('From'); // e.g. "whatsapp:+12053128982"
+  const body = form.get('Body')?.trim();
+  const authorIdentity = form.get('ProfileName') || form.get('ProfileName') || '';
 
-    // Parse form data
-    const formData = new URLSearchParams(rawBody);
-    const eventType      = formData.get('EventType');
-    const conversationSid = formData.get('ConversationSid');
-    const body           = formData.get('Body');
-    const author         = formData.get('Author');
+  console.log('📑 Parsed fields:', { incoming, body, authorIdentity });
 
-    console.log('📑 Parsed form fields:', {
-      eventType,
-      conversationSid,
-      body,
-      author,
-    });
-
-    // Only handle new messages
-    if (eventType === 'onMessageAdd') {
-      console.log('ℹ️ Event is onMessageAdd');
-
-      if (!conversationSid || !body || !author) {
-        console.warn('⚠️ Missing one of conversationSid/body/author, skipping response');
-      } else if (author === BOT_NAME) {
-        console.log(`ℹ️ Author is bot (${BOT_NAME}), skipping echo`);
-      } else {
-        // Echo the user's message
-        const reply = `You said: ${body}`;
-        console.log(`✉️ Sending reply to ${conversationSid}: "${reply}"`);
-
-        try {
-          const msg = await sendConversationMessage(conversationSid, reply);
-          console.log('✅ Reply sent, message SID=', msg.sid);
-        } catch (sendErr: any) {
-          console.error('❌ sendConversationMessage failed:', sendErr);
-        }
-      }
-    } else {
-      console.log(`ℹ️ Ignoring event type: ${eventType}`);
-    }
-
+  // 2) Normalize phone and lookup user
+  if (!incoming) {
+    console.error('❌ No From field in payload—cannot identify user');
     return NextResponse.json({}, { status: 200 });
-  } catch (error: any) {
-    console.error('🚨 Error in /api/conversations/webhook:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
   }
+  const phone = incoming.replace('whatsapp:', '');
+  console.log('ℹ️ Looking up user by phone:', phone);
+
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { phone } });
+    console.log('ℹ️ User record:', user);
+  } catch (dbErr: any) {
+    console.error('❌ DB lookup error:', dbErr);
+    return NextResponse.json({ error: dbErr.message }, { status: 500 });
+  }
+
+  if (!user?.conversationSid) {
+    console.error('❌ No conversationSid in DB for user', user?.id);
+    return NextResponse.json({}, { status: 200 });
+  }
+
+  // 3) Only echo real user messages
+  if (!body) {
+    console.log('ℹ️ Empty body; nothing to reply');
+  } else if (authorIdentity === BOT_NAME) {
+    console.log('ℹ️ Message came from bot; skipping');
+  } else {
+    const reply = `You said: ${body}`;
+    console.log(`✉️ Sending reply to ${user.conversationSid}: "${reply}"`);
+    try {
+      const msg = await sendConversationMessage(user.conversationSid, reply);
+      console.log('✅ Reply sent, SID=', msg.sid);
+    } catch (sendErr: any) {
+      console.error('❌ sendConversationMessage failed:', sendErr);
+    }
+  }
+
+  // 4) Tell Twilio “all good” so it won’t retry
+  return NextResponse.json({}, { status: 200 });
 }
