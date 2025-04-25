@@ -13,6 +13,13 @@ const CONVERSATIONS_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
 export const FROM_WHATSAPP = 'whatsapp:+14155238886';
 export const BOT_NAME = 'WhiskerAI';
 
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '@/lib/store';
+import { setUser, getUser } from '@/lib/slices/authSlice';
+const { userId, phone, name } = useSelector((s: RootState) => s.auth);
+
+const dispatch = useDispatch<AppDispatch>();
+
 /**
  * Send a Twilio Verify code via SMS.
  */
@@ -91,6 +98,15 @@ export async function createConversationForUser(userId: string, phone: string) {
       attributes: JSON.stringify({ userId, phone }),
     });
   console.log(`[Twilio] Created conversation ${conv.sid}`);
+  dispatch(
+    setUser({
+      userId,
+      phone,
+      name: name ?? '',
+      conversationId: conv.sid,
+    })
+  );
+
 
   // 4) Add WhatsApp participant + bot
   await Promise.all([

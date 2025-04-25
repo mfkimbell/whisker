@@ -83,15 +83,7 @@ export default function VerifyPage() {
         }),
       );
 
-      // 3) Fire-and-forget background work
-      void fetch('/api/verify/post-verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: returnedUserId,
-          phone: returnedPhone,
-        }),
-      });
+    
 
       // 4) Redirect to home
       router.push('/');
