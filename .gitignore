@@ -55,5 +55,14 @@ Thumbs.db
 firebase-debug.log
 firestore-debug.log
 
-prisma/schema.prisma
-prisma/migrations/
+# -- Prisma files -----------------------------------
+
+# Track schema & migrations
+# prisma/schema.prisma                  # should be versioned :contentReference[oaicite:9]{index=9}
+# prisma/migrations/                    # should be versioned :contentReference[oaicite:10]{index=10}
+
+# Ignore generated Prisma Client
+src/generated/prisma/                   # custom client output :contentReference[oaicite:11]{index=11}
+
+# Ignore default Prisma engine binaries
+node_modules/.prisma/                   # default client output :contentReference[oaicite:12]{index=12}
