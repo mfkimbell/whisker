@@ -18,12 +18,14 @@ export default function VerifyPage() {
 
   const { userId, phone, name } = useSelector((s: RootState) => s.auth);
 
+  // Auto–send OTP once when page loads
   useEffect(() => {
     if (!phone || hasAutoSent.current) return;
     hasAutoSent.current = true;
     sendCode();
   }, [phone]);
 
+  // Send or resend the verification code
   async function sendCode() {
     if (!phone) return;
     setSending(true);
@@ -44,37 +46,59 @@ export default function VerifyPage() {
     }
   }
 
+  // Handle form submit: verify OTP, queue background work, then redirect
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
     if (!userId || !phone) {
       alert('Missing user information.');
       return;
     }
+    setSending(true);
 
     try {
+      // 1) Quick verify + DB update
       const res = await fetch('/api/verify/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, phone, code }),
+        body: JSON.stringify({ phone, code }),
       });
-
       const data = await res.json();
-      if (!res.ok) {
+      if (!res.ok || !data.success) {
         alert(data.error || 'Invalid code, please try again.');
+        setSending(false);
         return;
       }
 
-      const { conversationSid } = data;
+      const { conversationSid, userId: returnedUserId, phone: returnedPhone } = data;
 
-      analytics.identify(userId, { phoneVerified: true });
+      // 2) Analytics + Redux
+      analytics.identify(returnedUserId, { phoneVerified: true });
       analytics.track('Phone Verified');
+      dispatch(
+        setUser({
+          userId: returnedUserId,
+          phone: returnedPhone,
+          name: name ?? '',
+          conversationId: conversationSid,
+        }),
+      );
 
-      dispatch(setUser({ userId, phone, name: name ?? '', conversationId: conversationSid }));
+      // 3) Fire-and-forget background work
+      void fetch('/api/verify/post-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: returnedUserId,
+          phone: returnedPhone,
+        }),
+      });
 
+      // 4) Redirect to home
       router.push('/');
     } catch (err) {
       console.error('Verification failed:', err);
       alert('Something went wrong during verification.');
+      setSending(false);
     }
   }
 
@@ -100,9 +124,10 @@ export default function VerifyPage() {
         </div>
         <button
           type="submit"
+          disabled={sending}
           className="w-full bg-amber-700 text-white py-2 rounded hover:bg-amber-800 transition"
         >
-          Verify
+          {sending ? 'Verifying…' : 'Verify'}
         </button>
       </form>
 
