@@ -1,4 +1,5 @@
 // src/lib/twilio.ts
+
 import twilio from 'twilio';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID!;
@@ -13,36 +14,35 @@ export const FROM_WHATSAPP = 'whatsapp:+14155238886';
 export const BOT_NAME = 'WhiskerAI';
 
 /**
- * Send a Twilio Verify code via SMS.
+ * Send a chat message as the bot into a Conversation.
  */
-export async function sendVerificationCode(phone: string) {
-  const to = phone.startsWith('+') ? phone : `+${phone}`;
-  return twilioClient.verify
-    .services(VERIFY_SERVICE_SID)
-    .verifications.create({ to, channel: 'sms' });
-}
-
-/**
- * Check a Twilio Verify code.
- */
-export async function checkVerificationCode(phone: string, code: string) {
-  const to = phone.startsWith('+') ? phone : `+${phone}`;
-  return twilioClient.verify.services(VERIFY_SERVICE_SID).verificationChecks.create({ to, code });
+export async function sendConversationMessage(conversationSid: string, body: string) {
+  console.log(`✉️ [Twilio] sendConversationMessage → convSid=${conversationSid}, body="${body}"`);
+  try {
+    const msg = await twilioClient.conversations.v1
+      .services(CONVERSATIONS_SERVICE_SID)
+      .conversations(conversationSid)
+      .messages.create({ author: BOT_NAME, body });
+    console.log('✅ [Twilio] Message sent, SID=', msg.sid);
+    return msg;
+  } catch (err: any) {
+    console.error('❌ [Twilio] sendConversationMessage failed:', err);
+    throw err;
+  }
 }
 
 /**
  * Create (once) a Twilio Conversation for a user and add WhatsApp + bot participants.
- * Deletes any existing Conversation for that WhatsApp number in parallel.
- * Returns the new Conversation SID.
  */
 export async function createConversationForUser(userId: string, phone: string) {
   const toWhatsApp = `whatsapp:${phone}`;
-  console.log(`🔍 Checking existing bindings for ${toWhatsApp}`);
+  console.log(`🔍 [Twilio] createConversationForUser for ${userId} / ${toWhatsApp}`);
 
   // 1) List all conversations
   const convs = await twilioClient.conversations.v1
-    .services(CONVERSATIONS_SERVICE_SID) // <-- explicit v1.services
+    .services(CONVERSATIONS_SERVICE_SID)
     .conversations.list();
+  console.log(`ℹ️ Found ${convs.length} existing conversations`);
 
   // 2) Delete matching conversations in parallel
   await Promise.all(
@@ -57,9 +57,9 @@ export async function createConversationForUser(userId: string, phone: string) {
             .services(CONVERSATIONS_SERVICE_SID)
             .conversations(conv.sid)
             .remove();
-          console.log(`🗑️ Deleted conversation ${conv.sid}`);
+          console.log(`🗑️ [Twilio] Deleted conversation ${conv.sid}`);
         } catch (err: any) {
-          console.warn(`⚠️ Could not delete ${conv.sid}:`, err.message);
+          console.warn(`⚠️ [Twilio] Could not delete ${conv.sid}:`, err.message);
         }
       }
     }),
@@ -72,7 +72,7 @@ export async function createConversationForUser(userId: string, phone: string) {
       friendlyName: `Conversation for ${userId}`,
       attributes: JSON.stringify({ userId, phone }),
     });
-  console.log(`✅ Created conversation ${conv.sid}`);
+  console.log(`✅ [Twilio] Created conversation ${conv.sid}`);
 
   // 4) Add WhatsApp participant + bot in parallel
   await Promise.all([
@@ -88,19 +88,9 @@ export async function createConversationForUser(userId: string, phone: string) {
       .conversations(conv.sid)
       .participants.create({ identity: BOT_NAME }),
   ]);
-  console.log('✅ Participants added');
+  console.log('✅ [Twilio] Participants added to conversation');
 
   return conv.sid;
 }
 
-/**
- * Send a chat message as the bot into a Conversation.
- */
-export async function sendConversationMessage(conversationSid: string, body: string) {
-  const msg = await twilioClient.conversations.v1
-    .services(CONVERSATIONS_SERVICE_SID)
-    .conversations(conversationSid)
-    .messages.create({ author: BOT_NAME, body });
-  console.log(`✅ Sent message: ${msg.sid}`);
-  return msg;
-}
+// (other Verify functions below if you want logging there as well…)
