@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { checkVerificationCode } from '@/lib/twilio';
 
 export async function POST(req: Request) {
+  console.log("CHECK IS BEING CALLED")
   const { phone, code } = await req.json();
   const formatted = phone.startsWith('+') ? phone : `+${phone}`;
 

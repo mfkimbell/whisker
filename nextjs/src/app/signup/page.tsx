@@ -41,7 +41,7 @@ export default function SignupPage() {
     });
     analytics.track('Signed Up', { method: 'email+phone' });
 
-    const myPhone = process.env.TWILIO_PROXY_NUMBER || '';
+    const myPhone = '+12053128982';
 
     // store in Redux for cross‐page use
     dispatch(setUser({ userId, phone: myPhone, name }));

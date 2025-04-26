@@ -4,7 +4,8 @@ import Twilio from 'twilio';
 
 const client = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
 
-const mitch = process.env.TWILIO_PROXY_NUMBER || '';
+const mitch = "+12053128982"
+// const mitch = process.env.TWILIO_PROXY_NUMBER || '';
 
 //removed req: NextRequest
 export async function POST() {
