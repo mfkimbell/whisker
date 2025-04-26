@@ -1,34 +1,39 @@
 // lib/cartSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type CartItem = { id: string; name: string; price: number }
+export type CartItem = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+};
 
 interface CartState {
-  items: CartItem[]
-  abandonedTracked: boolean
+  items: CartItem[];
+  abandonedTracked: boolean;
 }
 
 const initialState: CartState = {
   items: [],
   abandonedTracked: false,
-}
+};
 
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     addItem(state, action: PayloadAction<CartItem>) {
-      state.items.push(action.payload)
-      state.abandonedTracked = false
+      state.items.push(action.payload);
+      state.abandonedTracked = false;
     },
     removeItem(state, action: PayloadAction<string>) {
-      state.items = state.items.filter(i => i.id !== action.payload)
+      state.items = state.items.filter((i) => i.id !== action.payload);
     },
     markAbandonedTracked(state) {
-      state.abandonedTracked = true
+      state.abandonedTracked = true;
     },
   },
-})
+});
 
-export const { addItem, removeItem, markAbandonedTracked } = cartSlice.actions
-export default cartSlice.reducer
+export const { addItem, removeItem, markAbandonedTracked } = cartSlice.actions;
+export default cartSlice.reducer;

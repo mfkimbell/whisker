@@ -2,32 +2,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/store";
-import { removeItem, markAbandonedTracked } from "@/lib/slices/cartSlice";
-import { analytics } from "@/lib/segment";
+import { removeItem } from "@/lib/slices/cartSlice";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
+import Image from "next/image";
 
 export default function CartDropdown() {
   const items = useSelector((s: RootState) => s.cart.items);
-  const abandonedTracked = useSelector(
-    (s: RootState) => s.cart.abandonedTracked
-  );
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  // 30s abandonment tracking (as before)
-  useEffect(() => {
-    if (items.length > 0 && !abandonedTracked) {
-      const timer = setTimeout(() => {
-        analytics.track("Cart Abandoned", { items });
-        dispatch(markAbandonedTracked());
-      }, 30_000);
-      return () => clearTimeout(timer);
-    }
-  }, [items, abandonedTracked, dispatch]);
 
   // close on outside click
   useEffect(() => {
@@ -62,22 +48,48 @@ export default function CartDropdown() {
           {items.length === 0 ? (
             <p className="text-sm text-gray-500">Your cart is empty.</p>
           ) : (
-            <ul className="space-y-2 max-h-64 overflow-auto">
-              {items.map((item) => (
-                <li key={item.id} className="flex justify-between items-center">
-                  <span>
-                    {item.name} — ${item.price}
-                  </span>
-                  <button
-                    onClick={() => dispatch(removeItem(item.id))}
-                    className="text-red-500 hover:underline text-sm"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <>
+              <ul className="space-y-2 max-h-64 overflow-auto">
+                {items.map((item) => (
+                  <li key={item.id} className="flex flex-col justify-between">
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={50}
+                        height={50}
+                      />
+                      <div className="flex flex-col justify-between">
+                        <div className="flex flex-col">
+                          <span className="max-w-[175px] truncate">
+                            {item.name}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            ${item.price}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => dispatch(removeItem(item.id))}
+                          className="text-red-500 hover:underline text-sm text-left"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <hr className="my-2 border-t border-black" />
+
+              <div className="flex justify-between">
+                <p className="text-sm text-gray-500">
+                  Total: ${items.reduce((acc, item) => acc + item.price, 0)}
+                </p>
+              </div>
+            </>
           )}
+
           {items.length > 0 && (
             <div className="mt-4 flex justify-between">
               <button
@@ -87,8 +99,11 @@ export default function CartDropdown() {
                 Checkout
               </button>
               <button
-                onClick={() => router.push("/shop")}
-                className="underline text-sm text-gray-600"
+                onClick={() => {
+                  router.push("/shop");
+                  setOpen(false);
+                }}
+                className="underline text-sm text-gray-600 cursor-pointer"
               >
                 Continue Shopping
               </button>

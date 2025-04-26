@@ -1,30 +1,36 @@
 // app/product/[id]/page.tsx
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
-import { analytics } from '@/lib/segment';
-import { useDispatch } from 'react-redux';
-import { addItem } from '@/lib/slices/cartSlice';
-import { AppDispatch } from '@/lib/store';
-import { v4 as uuidv4 } from 'uuid';
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { analytics } from "@/lib/segment";
+import { useDispatch } from "react-redux";
+import { addItem } from "@/lib/slices/cartSlice";
+import { AppDispatch } from "@/lib/store";
+import { v4 as uuidv4 } from "uuid";
+import { products } from "@/lib/data/products";
 
 // Mock catalog
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const catalog: Record<string, any> = {
-  prod1: { id: 'prod1', name: 'Kitten Starter Kit', category: 'Care', price: 49 },
-  prod2: { id: 'prod2', name: 'Auto Feeder Pro', category: 'Care', price: 149 },
+  prod1: {
+    id: "prod1",
+    name: "Kitten Starter Kit",
+    category: "Care",
+    price: 49,
+  },
+  prod2: { id: "prod2", name: "Auto Feeder Pro", category: "Care", price: 149 },
 };
 
 export default function ProductPage() {
   const { id } = useParams();
-  const idStr = Array.isArray(id) ? id[0] : (id ?? 'unknown');
-  const product = catalog[idStr];
+  const idStr = Array.isArray(id) ? id[0] : id ?? "unknown";
+  const product = products.find((p) => p.id === idStr);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (product) {
-      analytics.track('Viewed Product', {
+      analytics.track("Viewed Product", {
         productId: product.id,
         name: product.name,
         category: product.category,
@@ -35,24 +41,41 @@ export default function ProductPage() {
 
   function handleAddToCart() {
     if (!product) return;
-    analytics.track('Added to Cart', {
+    analytics.track("Added to Cart", {
       productId: product.id,
       name: product.name,
       price: product.price,
     });
-    dispatch(addItem(product));
+
+    dispatch(
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      })
+    );
   }
 
   function handleBuyNow() {
     if (!product) return;
     const orderId = uuidv4();
-    analytics.track('Purchase Completed', {
+    analytics.track("Purchase Completed", {
       orderId,
       orderValue: product.price,
-      items: [{ productId: product.id, name: product.name, price: product.price, quantity: 1 }],
+      items: [
+        {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+        },
+      ],
     });
     // Optionally: show a confirmation or navigate
-    alert(`🎉 Purchased ${product.name} for $${product.price}! (order ${orderId})`);
+    alert(
+      `🎉 Purchased ${product.name} for $${product.price}! (order ${orderId})`
+    );
   }
 
   if (!product) return <p>Loading…</p>;
