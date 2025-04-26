@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/lib/store";
 import { analytics } from "@/lib/segment";
 import { addItem } from "@/lib/slices/cartSlice";
+import { toast } from "react-toastify";
 
 export type ProductProps = {
   product: {
@@ -41,6 +42,8 @@ export const Product = ({ product }: ProductProps) => {
         image: product.image,
       })
     );
+
+    toast.success(`Added ${product.name} to Cart`, { autoClose: 3500 });
   }
 
   return (

@@ -6,6 +6,8 @@ import { removeItem } from "@/lib/slices/cartSlice";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import { analytics } from "@/lib/segment";
+import { toast } from "react-toastify";
 
 export default function CartDropdown() {
   const items = useSelector((s: RootState) => s.cart.items);
@@ -25,6 +27,23 @@ export default function CartDropdown() {
     window.addEventListener("click", onClick);
     return () => window.removeEventListener("click", onClick);
   }, [open]);
+
+  const handleCheckout = () => {
+    items.forEach((item) => {
+      analytics.track("Purchase Complete", {
+        product: item.name,
+        price: item.price,
+        quantity: 1,
+      });
+
+      dispatch(removeItem(item.id));
+    });
+
+    setOpen(false);
+    toast.success(
+      "Congrats on making your purchase! Your order will be shipped soon."
+    );
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -97,8 +116,11 @@ export default function CartDropdown() {
           {items.length > 0 && (
             <div className="mt-4 flex justify-between">
               <button
-                onClick={() => router.push("/checkout")}
-                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+                onClick={() => {
+                  handleCheckout();
+                  router.push("/");
+                }}
+                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 cursor-pointer"
               >
                 Checkout
               </button>
