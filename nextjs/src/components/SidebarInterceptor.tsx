@@ -28,6 +28,7 @@ type PageEvent = {
   timestamp: string;
   anonymousId: string;
   messageId: string;
+  event: string;
   properties: {
     path: string;
     url: string;
@@ -76,6 +77,10 @@ export function SidebarInterceptor() {
       })
     );
   }, []);
+
+  if (simpleEvents.length === 0 && eventPayloads.length === 0) {
+    return 
+  }
 
   return (
     <Sidebar className="z-50">
@@ -130,26 +135,29 @@ export function SidebarInterceptor() {
         {simpleEvents.length > 0 && (
           <SidebarGroup>
             <SidebarGroupLabel className="text-sm font-medium text-gray-500">
-              Track Events
+              Page Events
             </SidebarGroupLabel>
             <div className="p-3 space-y-2">
-              {simpleEvents.slice(-5).map((event, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col bg-gray-50 p-2 rounded-md shadow-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-blue-600 px-2 py-1 bg-blue-50 rounded-md">
-                      {event.name}
-                    </span>
-                    {event.timestamp && (
-                      <span className="text-xs text-gray-500">
-                        {new Date(event.timestamp).toLocaleTimeString()}
+              {simpleEvents
+                .slice(-5)
+                .reverse()
+                .map((event, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col bg-gray-50 p-2 rounded-md shadow-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-blue-600 px-2 py-1 bg-blue-50 rounded-md">
+                        {event.name}
                       </span>
-                    )}
+                      {event.timestamp && (
+                        <span className="text-xs text-gray-500">
+                          {new Date(event.timestamp).toLocaleTimeString()}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </SidebarGroup>
         )}
@@ -157,70 +165,79 @@ export function SidebarInterceptor() {
         {eventPayloads.length > 0 && (
           <SidebarGroup>
             <SidebarGroupLabel className="text-sm font-medium text-gray-500">
-              Page Events
+              Event Payloads
             </SidebarGroupLabel>
             <div className="p-3 space-y-2">
-              {eventPayloads.slice(-5).map((event, idx) => (
-                <div
-                  key={idx}
-                  className="bg-gray-50 p-3 rounded-md shadow-sm space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-green-600 px-2 py-1 bg-green-50 rounded-md">
-                      {event.name}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(event.timestamp).toLocaleTimeString()}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-gray-200 text-xs space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Type:</span>
-                      <span className="font-mono">{event.type}</span>
+              {eventPayloads
+                .slice(-5)
+                .reverse()
+                .map((event, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-gray-50 p-3 rounded-md shadow-sm space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-green-600 px-2 py-1 bg-green-50 rounded-md">
+                        {event.name || event.event}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(event.timestamp).toLocaleTimeString()}
+                      </span>
                     </div>
 
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Path:</span>
-                      <span className="font-mono">{event.properties.path}</span>
-                    </div>
-
-                    {event.properties.category && (
+                    <div className="pt-2 border-t border-gray-200 text-xs space-y-1">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Category:</span>
-                        <span>{event.properties.category}</span>
+                        <span className="text-gray-500">Type:</span>
+                        <span className="font-mono">{event.type}</span>
                       </div>
-                    )}
 
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Title:</span>
-                      <span className="truncate max-w-32">
-                        {event.properties.title}
-                      </span>
-                    </div>
+                      {event.properties.path && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Path:</span>
+                          <span className="font-mono">
+                            {event.properties.path}
+                          </span>
+                        </div>
+                      )}
 
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Message ID:</span>
-                      <span
-                        className="font-mono cursor-pointer underline"
-                        onClick={() => toggleMessageIdVisibility(idx)}
-                      >
-                        {showFullMessageId[idx]
-                          ? "Show less"
-                          : `${event.messageId.slice(0, 8)}...`}
-                      </span>
-                    </div>
+                      {event.properties.category && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Category:</span>
+                          <span>{event.properties.category}</span>
+                        </div>
+                      )}
 
-                    {showFullMessageId[idx] && (
-                      <div className="flex mt-1">
-                        <span className="font-mono text-xs bg-gray-100 p-1 rounded">
-                          {event.messageId}
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">
+                          {event.properties.title ? "Title" : "Event"}
+                        </span>
+                        <span className="truncate max-w-32">
+                          {event.properties.title || event.event}
                         </span>
                       </div>
-                    )}
+
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Message ID:</span>
+                        <span
+                          className="font-mono cursor-pointer underline"
+                          onClick={() => toggleMessageIdVisibility(idx)}
+                        >
+                          {showFullMessageId[idx]
+                            ? "Show less"
+                            : `${event.messageId.slice(0, 8)}...`}
+                        </span>
+                      </div>
+
+                      {showFullMessageId[idx] && (
+                        <div className="flex mt-1">
+                          <span className="font-mono text-xs bg-gray-100 p-1 rounded">
+                            {event.messageId}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </SidebarGroup>
         )}
