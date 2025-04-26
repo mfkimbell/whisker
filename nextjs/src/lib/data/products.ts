@@ -5,6 +5,7 @@ export const posts = [
     category: "Adoption",
     excerpt: "Everything you need to welcome your new kitten.",
     image: "/adoption.png",
+    date: "2024-01-01",
   },
   {
     slug: "cat-nutrition",
@@ -12,6 +13,7 @@ export const posts = [
     category: "Food",
     excerpt: "Top tips to keep your cat healthy and happy.",
     image: "/nutrition.png",
+    date: "2024-01-01",
   },
   {
     slug: "cat-toys",
@@ -19,6 +21,7 @@ export const posts = [
     category: "Toys",
     excerpt: "Engage your cat with these stimulating toy options.",
     image: "/toy.png",
+    date: "2024-01-01",
   },
   {
     slug: "grooming-guide",
@@ -26,6 +29,7 @@ export const posts = [
     category: "Care",
     excerpt: "Keep your cat looking their best year-round.",
     image: "/brush.png",
+    date: "2024-01-01",
   },
 ];
 
@@ -46,7 +50,7 @@ export const products = [
     promo: "Spend $100, get <b>$30</b> eGift Card",
     image: "/iams.png",
     description:
-      "Fuel your feline’s everyday adventures with Iams Adult Dry Cat Food. Crafted with real chicken as the #1 ingredient, this crunchy kibble delivers balanced protein to support strong muscles, while a custom fiber blend with prebiotics keeps digestion purring smoothly. Omega‑6 fatty acids nourish skin and coat, and every bite is free from artificial preservatives, flavors, or fillers—so your cat gets wholesome, unprocessed nutrition in every bowl."
+      "Fuel your feline’s everyday adventures with Iams Adult Dry Cat Food. Crafted with real chicken as the #1 ingredient, this crunchy kibble delivers balanced protein to support strong muscles, while a custom fiber blend with prebiotics keeps digestion purring smoothly. Omega‑6 fatty acids nourish skin and coat, and every bite is free from artificial preservatives, flavors, or fillers—so your cat gets wholesome, unprocessed nutrition in every bowl.",
   },
   {
     id: "prod2",
@@ -62,7 +66,7 @@ export const products = [
     promo: "New Customers Only: Spend $49+, Get $20 eGift Card",
     image: "/meowmix.png",
     description:
-      "The classic that cats ask for by name! MeowMix Original Choice combines four fun‑shaped kibbles packed with chicken, turkey, salmon, and ocean fish flavors cats crave. Fortified with essential vitamins, minerals, and antioxidants, this budget‑friendly favorite supports strong bones, healthy vision, and a shiny coat—perfect for multi‑cat households or anyone who wants great taste without breaking the bank."
+      "The classic that cats ask for by name! MeowMix Original Choice combines four fun‑shaped kibbles packed with chicken, turkey, salmon, and ocean fish flavors cats crave. Fortified with essential vitamins, minerals, and antioxidants, this budget‑friendly favorite supports strong bones, healthy vision, and a shiny coat—perfect for multi‑cat households or anyone who wants great taste without breaking the bank.",
   },
   {
     id: "prod3",
@@ -78,7 +82,7 @@ export const products = [
     promo: null,
     image: "/original.png",
     description:
-      "Inspired by nature’s diet, Orijen Original is bursting with 90% premium animal ingredients—including free‑run chicken and turkey, wild‑caught fish, and cage‑free eggs—delivering a biologically appropriate balance of protein and nutrients. Every kibble is gently coated with freeze‑dried raw for an irresistible taste cats instinctively love, while its grain‑free recipe supports lean muscle development and a healthy skin‑and‑coat glow."
+      "Inspired by nature’s diet, Orijen Original is bursting with 90% premium animal ingredients—including free‑run chicken and turkey, wild‑caught fish, and cage‑free eggs—delivering a biologically appropriate balance of protein and nutrients. Every kibble is gently coated with freeze‑dried raw for an irresistible taste cats instinctively love, while its grain‑free recipe supports lean muscle development and a healthy skin‑and‑coat glow.",
   },
   {
     id: "prod4",
@@ -94,15 +98,14 @@ export const products = [
     promo: "Free Shipping on this item",
     image: "/american.png",
     description:
-      "Treat sensitive stomachs to a mouth‑watering single‑protein diet with American Duck Recipe. Deboned duck delivers rich, novel‑protein goodness, while sweet potatoes provide easily digestible energy without corn, wheat, or soy. Added taurine supports heart and eye health, and a boost of omega fatty acids keeps coats plush and glossy. Perfect for picky eaters or cats with food sensitivities."
+      "Treat sensitive stomachs to a mouth‑watering single‑protein diet with American Duck Recipe. Deboned duck delivers rich, novel‑protein goodness, while sweet potatoes provide easily digestible energy without corn, wheat, or soy. Added taurine supports heart and eye health, and a boost of omega fatty acids keeps coats plush and glossy. Perfect for picky eaters or cats with food sensitivities.",
   },
 
   /* ---------- TOYS ---------- */
   {
     id: "prod5",
     brand: "Frisco",
-    name:
-      "Summer Parrot Interactive Chirping Flapping Electronic Plush Cat Toy with Silvervine & Catnip",
+    name: "Summer Parrot Interactive Chirping Flapping Electronic Plush Cat Toy with Silvervine & Catnip",
     category: "Toys",
     price: 14.99,
     originalPrice: 16.99,
@@ -113,7 +116,7 @@ export const products = [
     promo: "Buy 2, get 15% off",
     image: "/parrot.png",
     description:
-      "Bring the tropics indoors with the Frisco Summer Parrot! Powered by motion sensors, this plush pal chirps and flaps its wings when your cat pounces, triggering those natural hunting instincts. Infused with premium silvervine and catnip for extra excitement, the soft, durable fabric stands up to enthusiastic play sessions, giving your feline friend hours of feathered fun."
+      "Bring the tropics indoors with the Frisco Summer Parrot! Powered by motion sensors, this plush pal chirps and flaps its wings when your cat pounces, triggering those natural hunting instincts. Infused with premium silvervine and catnip for extra excitement, the soft, durable fabric stands up to enthusiastic play sessions, giving your feline friend hours of feathered fun.",
   },
   {
     id: "prod6",
@@ -129,7 +132,7 @@ export const products = [
     promo: "Spend $50, save $10",
     image: "/fish.png",
     description:
-      "Hook, line, and sinker—your cat won’t resist this lifelike Flopping Fish! A built‑in motion sensor makes the fish wiggle and flop when touched, enticing playful swats. The rechargeable battery means less waste and more play, and the pouch of potent catnip tucked inside cranks up the excitement. Simply remove the motor for easy USB charging and machine‑wash the plush cover to keep things fresh."
+      "Hook, line, and sinker—your cat won’t resist this lifelike Flopping Fish! A built‑in motion sensor makes the fish wiggle and flop when touched, enticing playful swats. The rechargeable battery means less waste and more play, and the pouch of potent catnip tucked inside cranks up the excitement. Simply remove the motor for easy USB charging and machine‑wash the plush cover to keep things fresh.",
   },
   {
     id: "prod7",
@@ -145,7 +148,7 @@ export const products = [
     promo: null,
     image: "/wobble.png",
     description:
-      "Make waves of fun with Yeow’s Fish in Ocean Cat Tracks! Three tiers of spinning balls and a wobbly fish topper keep inquisitive paws busy, encouraging batting, chasing, and healthy exercise—even when you’re not home. Each level locks securely to prevent rogue balls from escaping, and a sprinkle of included catnip turns playtime into a sea‑riously engaging adventure."
+      "Make waves of fun with Yeow’s Fish in Ocean Cat Tracks! Three tiers of spinning balls and a wobbly fish topper keep inquisitive paws busy, encouraging batting, chasing, and healthy exercise—even when you’re not home. Each level locks securely to prevent rogue balls from escaping, and a sprinkle of included catnip turns playtime into a sea‑riously engaging adventure.",
   },
   {
     id: "prod8",
@@ -161,13 +164,12 @@ export const products = [
     promo: null,
     image: "/scratcher.png",
     description:
-      "Say aloha to better scratching! This Step‑In Cat Scratcher doubles as a comfy lounge, featuring thick, layered corrugated cardboard that satisfies the urge to scratch while protecting your furniture. A vibrant tropical print brightens any room, and the generous size lets cats curl up after a satisfying session. Bonus: a packet of organic catnip is included for extra island vibes."
+      "Say aloha to better scratching! This Step‑In Cat Scratcher doubles as a comfy lounge, featuring thick, layered corrugated cardboard that satisfies the urge to scratch while protecting your furniture. A vibrant tropical print brightens any room, and the generous size lets cats curl up after a satisfying session. Bonus: a packet of organic catnip is included for extra island vibes.",
   },
   {
     id: "prod9",
     brand: "PetFusion",
-    name:
-      "Frisco Summer Felt Plush, Teaser & Ball Variety Pack Cat Toy with Silvervine & Catnip, 12 count",
+    name: "Frisco Summer Felt Plush, Teaser & Ball Variety Pack Cat Toy with Silvervine & Catnip, 12 count",
     category: "Toys",
     price: 11.95,
     originalPrice: 12.95,
@@ -178,7 +180,7 @@ export const products = [
     promo: "Free shipping on orders $49+",
     image: "/scratcher.png",
     description:
-      "Keep boredom at bay with this 12‑piece Summer Variety Pack! From feathered teaser wands to crinkly felt plush and rolling balls, there’s a toy for every mood. Each piece is stuffed with silvervine and catnip to ramp up the fun, making it ideal for multi‑cat homes or kittens who crave constant stimulation."
+      "Keep boredom at bay with this 12‑piece Summer Variety Pack! From feathered teaser wands to crinkly felt plush and rolling balls, there’s a toy for every mood. Each piece is stuffed with silvervine and catnip to ramp up the fun, making it ideal for multi‑cat homes or kittens who crave constant stimulation.",
   },
 
   /* ---------- CARE ---------- */
@@ -196,7 +198,7 @@ export const products = [
     promo: "Save $50 + free mat",
     image: "/bed.png",
     description:
-      "Bloom into comfort with the Purrfect Petals Bed! Its plush, flower‑shaped design cradles cats in soft faux‑fur petals, while the skid‑resistant base keeps naps steady on hard floors. The entire bed is machine‑washable for effortless upkeep, and its cheerful aesthetic adds a pop of color to any room’s décor."
+      "Bloom into comfort with the Purrfect Petals Bed! Its plush, flower‑shaped design cradles cats in soft faux‑fur petals, while the skid‑resistant base keeps naps steady on hard floors. The entire bed is machine‑washable for effortless upkeep, and its cheerful aesthetic adds a pop of color to any room’s décor.",
   },
   {
     id: "prod11",
@@ -212,7 +214,7 @@ export const products = [
     promo: null,
     image: "/litter.png",
     description:
-      "Spend less time scooping and more time cuddling! The ScoopFree SmartSpin automatically rakes waste into a sealed compartment minutes after your cat leaves, locking away odors. Connect via WiFi to monitor litter levels and track bathroom habits in real time, and enjoy up to 30 days of hands‑free freshness with leak‑proof crystal litter trays."
+      "Spend less time scooping and more time cuddling! The ScoopFree SmartSpin automatically rakes waste into a sealed compartment minutes after your cat leaves, locking away odors. Connect via WiFi to monitor litter levels and track bathroom habits in real time, and enjoy up to 30 days of hands‑free freshness with leak‑proof crystal litter trays.",
   },
   {
     id: "prod12",
@@ -228,7 +230,7 @@ export const products = [
     promo: "Buy 2, save $15",
     image: "/tree.png",
     description:
-      "Reach new heights of relaxation with the Claw Sleeper Cat Tree. A cozy faux‑fleece perch crowns the sturdy sisal‑wrapped posts, encouraging healthy scratching while offering a 17‑inch‑high lookout perfect for window watching. Dangling pom‑pom toys add playful flair, and the compact footprint slips easily into small spaces."
+      "Reach new heights of relaxation with the Claw Sleeper Cat Tree. A cozy faux‑fleece perch crowns the sturdy sisal‑wrapped posts, encouraging healthy scratching while offering a 17‑inch‑high lookout perfect for window watching. Dangling pom‑pom toys add playful flair, and the compact footprint slips easily into small spaces.",
   },
   {
     id: "prod13",
@@ -244,7 +246,7 @@ export const products = [
     promo: "Earn 2× reward points",
     image: "/feeder.png",
     description:
-      "Dinnertime just went digital! Schedule up to ten meals a day from anywhere with the Petlibro Smart Feeder, and watch your cat dine through the built‑in 1080p HD camera and two‑way audio. The 4‑liter hopper keeps food fresh with a desiccant bag, and clog‑free technology ensures kibble flows smoothly, so your pet never misses a meal."
+      "Dinnertime just went digital! Schedule up to ten meals a day from anywhere with the Petlibro Smart Feeder, and watch your cat dine through the built‑in 1080p HD camera and two‑way audio. The 4‑liter hopper keeps food fresh with a desiccant bag, and clog‑free technology ensures kibble flows smoothly, so your pet never misses a meal.",
   },
   {
     id: "prod14",
@@ -260,6 +262,6 @@ export const products = [
     promo: "Buy this, get 25% off feeder",
     image: "/water.png",
     description:
-      "Encourage better hydration with FurHaven’s 108‑oz Stainless Steel Fountain. A quiet pump sends water cascading over a shallow‑flow dish loved by whisker‑sensitive cats, while a 3‑stage charcoal and foam filter removes hair, debris, and bad tastes. The durable stainless design is dishwasher safe for fuss‑free cleaning and resists bacteria buildup better than plastic bowls."
-  }
+      "Encourage better hydration with FurHaven’s 108‑oz Stainless Steel Fountain. A quiet pump sends water cascading over a shallow‑flow dish loved by whisker‑sensitive cats, while a 3‑stage charcoal and foam filter removes hair, debris, and bad tastes. The durable stainless design is dishwasher safe for fuss‑free cleaning and resists bacteria buildup better than plastic bowls.",
+  },
 ];

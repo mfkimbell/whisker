@@ -12,12 +12,13 @@ export type ProductProps = {
     brand: string;
     name: string;
     category: string;
-    vendor: string;
     price: number;
-    originalPrice: number;
+    originalPrice?: number;
     rating: number;
     ratingCount: number;
-    badge: string;
+    badge: string | null;
+    isDeal?: boolean;
+    promo: string | null;
     image: string;
   };
 };

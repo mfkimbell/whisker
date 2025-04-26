@@ -28,9 +28,9 @@ const ProductInformation = ({
     originalPrice?: number;
     rating: number;
     ratingCount: number;
-    badge?: string;
+    badge: string | null;
     isDeal?: boolean;
-    promo?: string;
+    promo: string | null;
   };
 }) => {
   return (
