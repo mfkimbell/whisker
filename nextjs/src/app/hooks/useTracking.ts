@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useTrackLandingPage = () => {
+const useTracking = () => {
   const [events, setEvents] = useState<any[]>([]); // Use state to store events
 
   useEffect(() => {
@@ -17,22 +17,13 @@ const useTrackLandingPage = () => {
     window.addEventListener("storage", handleStorageChange);
 
     try {
-      const newEvent = {
-        name: "page_view",
-        timestamp: new Date().toISOString(),
-      };
-
       const eventsFromLocalStorage = localStorage.getItem("segment_events");
 
       if (eventsFromLocalStorage) {
         const parsedEvents = JSON.parse(eventsFromLocalStorage);
-        parsedEvents.push(newEvent);
-        localStorage.setItem("segment_events", JSON.stringify(parsedEvents));
         setEvents(parsedEvents); // Set the updated events in state
       } else {
-        const initialEvents = [newEvent];
-        localStorage.setItem("segment_events", JSON.stringify(initialEvents));
-        setEvents(initialEvents); // Set the initial events in state
+        setEvents([]); // Set the initial events in state
       }
     } catch (error) {
       console.error("Error tracking the page event:", error);
@@ -47,4 +38,4 @@ const useTrackLandingPage = () => {
   return events; // Return the events
 };
 
-export default useTrackLandingPage;
+export default useTracking;

@@ -9,7 +9,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { analytics } from "@/lib/segment";
-import useTrackLandingPage from "@/app/hooks/useTracking";
+import useTracking from "@/app/hooks/useTracking";
 
 type AnalyticsInfo = {
   userId?: string;
@@ -44,11 +44,7 @@ export function SidebarInterceptor() {
     traits: {},
   });
 
-  const trackingData = useTrackLandingPage();
-
-  const simpleEvents = trackingData.filter(
-    (event): event is TrackEvent => !("payload" in event)
-  );
+  const trackingData = useTracking();
 
   const eventPayloads = trackingData
     .filter(
@@ -78,8 +74,8 @@ export function SidebarInterceptor() {
     );
   }, []);
 
-  if (simpleEvents.length === 0 && eventPayloads.length === 0) {
-    return 
+  if (eventPayloads.length === 0) {
+    return;
   }
 
   return (
@@ -131,36 +127,6 @@ export function SidebarInterceptor() {
             )}
           </div>
         </SidebarGroup>
-
-        {simpleEvents.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-sm font-medium text-gray-500">
-              Page Events
-            </SidebarGroupLabel>
-            <div className="p-3 space-y-2">
-              {simpleEvents
-                .slice(-5)
-                .reverse()
-                .map((event, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col bg-gray-50 p-2 rounded-md shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-blue-600 px-2 py-1 bg-blue-50 rounded-md">
-                        {event.name}
-                      </span>
-                      {event.timestamp && (
-                        <span className="text-xs text-gray-500">
-                          {new Date(event.timestamp).toLocaleTimeString()}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </SidebarGroup>
-        )}
 
         {eventPayloads.length > 0 && (
           <SidebarGroup>
