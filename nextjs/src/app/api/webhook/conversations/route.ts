@@ -6,7 +6,7 @@ import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
 import { identifyUser } from '@/lib/segment-server';
 
 export async function POST(request: Request) {
-  console.log('🔔 /api/conversations/webhook invoked');
+  console.log('🔔 /api/webhook/conversations invoked');
 
   // 1) Grab raw body & parse
   const raw = await request.text();

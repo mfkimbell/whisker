@@ -78,39 +78,20 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-600 to-amber-700 text-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20 z-10"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-          <div className="py-20 md:py-28 flex flex-col items-center text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-md">
-              <Image
-                src="/welcome_to_whisker.png"
-                alt="Whisker Logo"
-                width={440}
-                height={40}
-              />
-            </h1>
-            <p className="text-xl md:text-2xl max-w-2xl mb-10">
-              Your one-stop for expert cat care guides, subscription food plans,
-              premium toys &amp; more.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/shop">
-                <button className="bg-black text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-gray-800 transition shadow-md cursor-pointer">
-                  Shop Products
-                </button>
-              </Link>
-              <Link href="/blog">
-                <button className="bg-white text-amber-700 px-8 py-3 rounded-full text-lg font-medium hover:bg-orange-200 transition shadow-md cursor-pointer">
-                  Read Our Blog
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-gradient-to-b from-white to-white text-black">
+  {/* Hero Section */}
+  <section className="relative w-full h-[400px] overflow-hidden flex justify-center items-center">
+    <div className="relative w-full max-w-[1640px] h-full">
+      <Image
+        src="/banner.png"
+        alt="Whisker Logo"
+        fill
+        className="object-contain"
+        priority
+      />
+    </div>
+  </section>
+
 
       {/* Latest Articles */}
       <section className="py-16 bg-gray-100 text-black">

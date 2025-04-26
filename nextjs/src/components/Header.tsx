@@ -41,7 +41,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex items-center justify-between p-4 bg-amber-700 text-black">
+    <header className="flex items-center justify-between p-4 bg-[#E77818] text-black">
       {/* Left: Logo + Nav */}
       <div className="flex items-center space-x-4">
         <Link href="/">
@@ -53,9 +53,7 @@ export default function Header() {
           />
         </Link>
         <nav className="flex items-center space-x-4">
-          <Link href="/blog" className="hover:text-white">
-            Blog
-          </Link>
+          
           <Link href="/shop" className="hover:text-white">
             Shop
           </Link>

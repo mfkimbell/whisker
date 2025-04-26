@@ -5,6 +5,7 @@ import { RootState, AppDispatch } from "@/lib/store";
 import { removeItem, markAbandonedTracked } from "@/lib/slices/cartSlice";
 import { analytics } from "@/lib/segment";
 import { useRouter } from "next/navigation";
+import { ShoppingCart } from "lucide-react";
 
 export default function CartDropdown() {
   const items = useSelector((s: RootState) => s.cart.items);
@@ -41,12 +42,13 @@ export default function CartDropdown() {
 
   return (
     <div ref={ref} className="relative">
+       
       <button
         onClick={() => setOpen((o) => !o)}
         className="relative p-2 cursor-pointer"
         aria-label="Toggle cart"
       >
-        🛒
+        <ShoppingCart size={20} className="text-white" />
         {items.length > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1 text-xs">
             {items.length}
