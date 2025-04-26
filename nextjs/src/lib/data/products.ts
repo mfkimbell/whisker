@@ -85,6 +85,6 @@ export const products = [
     badge: "Sale",
     isDeal: true,
     promo: "Free Shipping on this item",
-    image: "/original.png",
+    image: "/american.png",
   },
 ];
