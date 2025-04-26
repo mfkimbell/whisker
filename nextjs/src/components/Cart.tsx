@@ -50,8 +50,8 @@ export default function CartDropdown() {
           ) : (
             <>
               <ul className="space-y-2 max-h-64 overflow-auto">
-                {items.map((item) => (
-                  <li key={item.id} className="flex flex-col justify-between">
+                {items.map((item, index) => (
+                  <li key={item.id+index} className="flex flex-col justify-between">
                     <div className="flex items-center gap-4">
                       <Image
                         src={item.image}
