@@ -76,9 +76,7 @@ export default function Header() {
               onClick={() => setOpen((o) => !o)}
               className="flex items-center space-x-2 focus:outline-none"
             >
-              <span className="hidden sm:inline text-sm font-medium">
-                {name}
-              </span>
+              
               <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
                 {name ? name.charAt(0).toUpperCase() : "U"}
               </div>
