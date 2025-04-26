@@ -51,7 +51,10 @@ export default function CartDropdown() {
             <>
               <ul className="space-y-2 max-h-64 overflow-auto">
                 {items.map((item, index) => (
-                  <li key={item.id+index} className="flex flex-col justify-between">
+                  <li
+                    key={item.id + index}
+                    className="flex flex-col justify-between"
+                  >
                     <div className="flex items-center gap-4">
                       <Image
                         src={item.image}
@@ -84,7 +87,8 @@ export default function CartDropdown() {
 
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">
-                  Total: ${items.reduce((acc, item) => acc + item.price, 0)}
+                  Total: $
+                  {items.reduce((acc, item) => acc + item.price, 0).toFixed(2)}
                 </p>
               </div>
             </>

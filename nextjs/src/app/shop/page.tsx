@@ -18,8 +18,8 @@ export default function ShopPage() {
       checked: false,
     },
     {
-      id: "furniture",
-      name: "Furniture",
+      id: "food",
+      name: "Food",
       checked: false,
     },
   ]);
@@ -47,15 +47,12 @@ export default function ShopPage() {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-1">
+        <div className="p-2 md:col-span-1">
           <ShoppingPage.Filters filters={filters} onSetFilters={onSetFilters} />
         </div>
-        <div className="md:col-span-3">
+        <div className="p-2 md:col-span-3">
           <ShoppingPage.Products products={products} />
         </div>
-      </div>
-      <div className="flex justify-center">
-        <ShoppingPage.Pagination />
       </div>
     </div>
   );

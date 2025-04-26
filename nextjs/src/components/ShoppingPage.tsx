@@ -8,7 +8,7 @@ const Filters = ({
   onSetFilters: (id: string) => void;
 }) => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md h-full">
+    <div className="p-6 bg-white rounded-lg shadow-md h-fit">
       <h3 className="text-2xl font-bold mb-4 text-gray-800">Filters</h3>
       <div className="border-t pt-4">
         <h3 className="text-lg font-semibold mb-3 text-gray-700">Category</h3>
@@ -72,8 +72,4 @@ const Products = ({ products }: { products: any[] }) => {
   );
 };
 
-const Pagination = () => {
-  return <div>Pagination</div>;
-};
-
-export const ShoppingPage = { Filters, Products, Pagination };
+export const ShoppingPage = { Filters, Products };
