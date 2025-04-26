@@ -26,40 +26,37 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* 1. Load the Webchat bundle as early as possible */}
+        {/* Load Twilio Webchat bundle */}
         <Script
           src="https://media.twiliocdn.com/sdk/js/webchat-v3/releases/3.3.0/webchat.min.js"
           integrity="sha256-ydLLXnNrb26iFUvKAHsYt9atwfzz0LNcgBmo0NmD5Uk="
           crossOrigin="anonymous"
           strategy="beforeInteractive"
         />
-        
-        
       </head>
+
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Webchat mounts directly under <body> so it can float */}
+        <div id="twilio-webchat-widget-root"></div>
+
         <SidebarProvider defaultOpen={false}>
           <StoreProvider>
             <SidebarInset className="flex flex-col">
               <SidebarInterceptor />
               <Header />
-
-              {/* 2. Render the chat widget’s root node */}
-              <div id="twilio-webchat-widget-root"></div>
-
-              {/* 3. Initialize Webchat on the client */}
-              <Script id="twilio-webchat-init" strategy="afterInteractive">
-  {`
-    Twilio.initWebchat({
-      deploymentKey: "${process.env.NEXT_PUBLIC_TWILIO_DEPLOYMENT_KEY}"
-    });
-  `}
-</Script>
-
-
               {children}
             </SidebarInset>
           </StoreProvider>
         </SidebarProvider>
+
+        {/* Init Webchat */}
+        <Script id="twilio-webchat-init" strategy="afterInteractive">
+          {`
+            Twilio.initWebchat({
+              deploymentKey: "${process.env.NEXT_PUBLIC_TWILIO_DEPLOYMENT_KEY}"
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
