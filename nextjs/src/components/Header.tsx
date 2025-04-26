@@ -46,7 +46,7 @@ export default function Header() {
       <div className="flex items-center space-x-4">
         <Link href="/">
           <Image
-            src="/whisker_white.png"
+            src="/whisker_white.svg"
             alt="Whisker Logo"
             width={140}
             height={40}
