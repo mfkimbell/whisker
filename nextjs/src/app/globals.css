@@ -9,6 +9,15 @@
   z-index: 9999 !important;
 }
 
+/* 2-line text clamp with ellipsis */
+.clamp-2 {
+  display: -webkit-box;          /* enables the flex-like box model              */
+  -webkit-box-orient: vertical;  /* sets the box flow direction (vertical)       */
+  -webkit-line-clamp: 2;         /* number of visible lines before truncation    */
+  overflow: hidden;              /* hide the rest                                */
+}
+
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

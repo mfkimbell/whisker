@@ -29,12 +29,12 @@ export const Product = ({ product }: ProductProps) => {
         )}
 
         {/* product image */}
-        <div className="relative h-64">
+        <div className="relative h-64 p-6">
           <Image
             src={product.image}
             alt={`${product.brand} ${product.name}`}
             layout="fill"
-            className="object-contain"
+            className="object-contain p-6"
             sizes="(max-width: 1024px) 50vw, 25vw"
             priority
           />
@@ -43,7 +43,7 @@ export const Product = ({ product }: ProductProps) => {
         {/* details */}
         <div className="p-5 space-y-2 flex flex-col flex-grow">
           {/* brand + name */}
-          <h3 className="text-sm font-semibold leading-snug">
+          <h3 className="text-sm font-semibold leading-snug clamp-2">
             {product.brand} <span className="font-normal">{product.name}</span>
           </h3>
 
