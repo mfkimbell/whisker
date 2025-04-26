@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/sidebar";
 import { analytics } from "@/lib/segment";
 import useTracking from "@/app/hooks/useTracking";
+import { RootState} from "@/lib/store";
+import { useSelector} from "react-redux";
+import { Button } from "./ui/button";
+
 
 type AnalyticsInfo = {
   userId?: string;
@@ -33,6 +37,7 @@ type PageEvent = {
 };
 
 export function SidebarInterceptor() {
+  const items = useSelector((s: RootState) => s.cart.items);
   const [analyticsInfo, setAnalyticsInfo] = useState<AnalyticsInfo>({
     userId: undefined,
     anonymousId: undefined,
@@ -69,6 +74,12 @@ export function SidebarInterceptor() {
     );
   }, []);
 
+  const handleCartAbandon = () => {
+    console.log("handleCartAbandon")
+    analytics.track("Cart Abandoned", { items });
+   
+  }
+
   if (eventPayloads.length === 0) {
     return;
   }
@@ -82,6 +93,7 @@ export function SidebarInterceptor() {
           </h3>
         </div>
       </SidebarHeader>
+      <Button className="m-4" onClick={handleCartAbandon}>Abandon Cart</Button>
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
@@ -132,6 +144,7 @@ export function SidebarInterceptor() {
               {eventPayloads
                 .slice(-5)
                 .reverse()
+                .filter((event) => event.properties)
                 .map((event, idx) => (
                   <div
                     key={idx}
@@ -219,5 +232,6 @@ export async function getSegmentUserData() {
   const userId = user.id();
   const anonymousId = user.anonymousId();
   const traits = user.traits();
+
   return { userId, anonymousId, traits };
 }
