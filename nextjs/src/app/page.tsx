@@ -49,8 +49,7 @@ const products = [
     id: "prod1",
     brand: "Iams",
     name: "Adult Dry Cat Food, 16-lb bag",
-    category: "Care",
-    vendor: "chewy",
+    category: "Food",
     price: 49.00,           // sale / current price
     originalPrice: 55.99, 
     rating: 4.5,
@@ -65,7 +64,6 @@ const products = [
     brand: "Pawsitive",
     name: "Auto Feeder Pro",
     category: "Care",
-    vendor: "chewy",
     price: 149.00,
     originalPrice: 159.00,
 
@@ -81,7 +79,6 @@ const products = [
     brand: "LaserFun",
     name: "Interactive Laser Toy",
     category: "Toys",
-    vendor: "chewy",
     price: 29.99,
     originalPrice: 39.99,
 
@@ -97,7 +94,6 @@ const products = [
     brand: "KittyPalace",
     name: "Premium Cat Tree",
     category: "Furniture",
-    vendor: "chewy",
     price: 199.99,
     originalPrice: 249.99,
     rating: 4.8,
@@ -253,12 +249,7 @@ const products = [
                         <span className="text-sm line-through text-gray-400">${product.originalPrice}</span>
                       )}
                     </div>
-                    {product.autoshipPrice && (
-                      <div className="flex items-center gap-1 text-sm">
-                        <span className="font-semibold text-amber-600">${product.autoshipPrice}</span>
-                        <img src="/autoship.svg" alt="Autoship" className="h-4 w-auto" />
-                      </div>
-                    )}
+                    
                   </div>
             
                   {/* spacer pushes button to bottom if card height varies */}
