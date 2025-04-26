@@ -17,11 +17,6 @@ type AnalyticsInfo = {
   traits?: Record<string, any>;
 };
 
-type TrackEvent = {
-  name: string;
-  timestamp?: string;
-};
-
 type PageEvent = {
   type: string;
   name: string;
