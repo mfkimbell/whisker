@@ -33,10 +33,10 @@ export default function CartDropdown() {
         className="relative p-2 cursor-pointer flex items-center"
         aria-label="Toggle cart"
       >
-        <ShoppingCart size={20} className="text-white" />
+        <ShoppingCart size={20} className="text-white relative" />
         <span className="ml-2 text-white">View Cart</span>
         {items.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1 text-xs">
+          <span className="absolute top-1 right-21 bg-red-600 text-white rounded-full px-1 text-xs">
             {items.length}
           </span>
         )}
@@ -70,7 +70,7 @@ export default function CartDropdown() {
                         </div>
                         <button
                           onClick={() => dispatch(removeItem(item.id))}
-                          className="text-red-500 hover:underline text-sm text-left"
+                          className="text-red-500 hover:underline text-sm text-left cursor-pointer"
                         >
                           Remove
                         </button>
