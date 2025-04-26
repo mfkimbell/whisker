@@ -1,4 +1,5 @@
 // src/lib/twilio.ts
+"use server";
 
 import twilio from 'twilio';
 
@@ -12,13 +13,6 @@ const CONVERSATIONS_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
 // WhatsApp sandbox number (demo only)
 export const FROM_WHATSAPP = 'whatsapp:+14155238886';
 export const BOT_NAME = 'WhiskerAI';
-
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '@/lib/store';
-import { setUser, getUser } from '@/lib/slices/authSlice';
-const { userId, phone, name } = useSelector((s: RootState) => s.auth);
-
-const dispatch = useDispatch<AppDispatch>();
 
 /**
  * Send a Twilio Verify code via SMS.
@@ -57,17 +51,18 @@ export async function checkVerificationCode(phone: string, code: string) {
 }
 
 /**
- * Create (once) a Twilio Conversation for a user and add WhatsApp + bot participants.
+ * Create a Twilio Conversation for a user and return its SID.
+ * Persisting side-effects (e.g., saving to Redux or database) should be handled externally.
  */
 export async function createConversationForUser(userId: string, phone: string) {
   const toWhatsApp = `whatsapp:${phone}`;
   console.log(`[Twilio] createConversationForUser → user=${userId}, address=${toWhatsApp}`);
 
-  // 1) List all conversations
+  // 1) List all existing conversations
   const convs = await twilioClient.conversations.v1
     .services(CONVERSATIONS_SERVICE_SID)
     .conversations.list();
-  console.log(`[Twilio] Found ${convs.length} existing conversations`);
+  console.log(`[Twilio] Found ${convs.length} conversations`);
 
   // 2) Delete any old ones for this number
   await Promise.all(
@@ -90,7 +85,7 @@ export async function createConversationForUser(userId: string, phone: string) {
     }),
   );
 
-  // 3) Create a fresh conversation
+  // 3) Create a new conversation
   const conv = await twilioClient.conversations.v1
     .services(CONVERSATIONS_SERVICE_SID)
     .conversations.create({
@@ -98,31 +93,6 @@ export async function createConversationForUser(userId: string, phone: string) {
       attributes: JSON.stringify({ userId, phone }),
     });
   console.log(`[Twilio] Created conversation ${conv.sid}`);
-  dispatch(
-    setUser({
-      userId,
-      phone,
-      name: name ?? '',
-      conversationId: conv.sid,
-    })
-  );
-
-
-  // 4) Add WhatsApp participant + bot
-  await Promise.all([
-    twilioClient.conversations.v1
-      .services(CONVERSATIONS_SERVICE_SID)
-      .conversations(conv.sid)
-      .participants.create({
-        'messagingBinding.address': toWhatsApp,
-        'messagingBinding.proxyAddress': FROM_WHATSAPP,
-      }),
-    twilioClient.conversations.v1
-      .services(CONVERSATIONS_SERVICE_SID)
-      .conversations(conv.sid)
-      .participants.create({ identity: BOT_NAME }),
-  ]);
-  console.log('[Twilio] Participants added to conversation');
 
   return conv.sid;
 }
@@ -130,7 +100,10 @@ export async function createConversationForUser(userId: string, phone: string) {
 /**
  * Send a chat message as the bot into a Conversation.
  */
-export async function sendConversationMessage(conversationSid: string, body: string) {
+export async function sendConversationMessage(
+  conversationSid: string,
+  body: string,
+) {
   console.log(`[Twilio] sendConversationMessage → convSid=${conversationSid}, body="${body}"`);
   try {
     const msg = await twilioClient.conversations.v1
