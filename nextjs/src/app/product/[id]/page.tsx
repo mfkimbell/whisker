@@ -58,27 +58,6 @@ export default function ProductPage() {
     );
   }
 
-  function handleBuyNow() {
-    if (!product) return;
-    const orderId = uuidv4();
-    analytics.track("Purchase Completed", {
-      orderId,
-      orderValue: product.price,
-      items: [
-        {
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          quantity: 1,
-        },
-      ],
-    });
-    // Optionally: show a confirmation or navigate
-    alert(
-      `🎉 Purchased ${product.name} for $${product.price}! (order ${orderId})`
-    );
-  }
-
   if (!product) return <p>Loading…</p>;
 
   return (
@@ -87,10 +66,7 @@ export default function ProductPage() {
         <ProductPageComponent.ProductImage path={product.image} />
         <div className="w-full h-full">
           <ProductPageComponent.ProductInformation product={product} />
-          <ProductPageComponent.ProductActions
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-          />
+          <ProductPageComponent.ProductActions onAddToCart={handleAddToCart} />
         </div>
       </div>
     </div>

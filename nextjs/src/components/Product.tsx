@@ -1,5 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/lib/store";
+import { analytics } from "@/lib/segment";
+import { addItem } from "@/lib/slices/cartSlice";
 
 export type ProductProps = {
   product: {
@@ -18,6 +22,27 @@ export type ProductProps = {
 };
 
 export const Product = ({ product }: ProductProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  function handleAddToCart(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (!product) return;
+    analytics.track("Added to Cart", {
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+    });
+
+    dispatch(
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      })
+    );
+  }
+
   return (
     <Link key={product.id} href={`/product/${product.id}`}>
       <div className="relative flex flex-col rounded-xl border bg-white shadow-sm hover:shadow-lg transition">
@@ -107,7 +132,10 @@ export const Product = ({ product }: ProductProps) => {
           <div className="flex-grow" />
 
           {/* add to cart */}
-          <button className="w-full rounded-full bg-amber-600 py-2 text-sm font-medium text-white transition hover:bg-amber-700">
+          <button
+            className="w-full rounded-full bg-amber-600 py-2 text-sm font-medium text-white transition hover:bg-amber-700 cursor-pointer"
+            onClick={handleAddToCart}
+          >
             Add to Cart
           </button>
         </div>
