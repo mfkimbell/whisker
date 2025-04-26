@@ -10,6 +10,7 @@ import { clearUser } from "@/lib/slices/authSlice";
 import type { RootState, AppDispatch } from "@/lib/store";
 import Image from "next/image";
 import { SidebarTrigger } from "./ui/sidebar";
+import { ShoppingBag } from "lucide-react";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,17 +53,23 @@ export default function Header() {
             height={40}
           />
         </Link>
-        <nav className="flex items-center space-x-4">
-          
-          <Link href="/shop" className="hover:text-white">
-            Shop
-          </Link>
-          <CartDropdown />
-        </nav>
       </div>
 
       {/* Right: Auth state (hydrated only) */}
       <div className="flex items-center space-x-4">
+        <nav className="flex items-center space-x-4">
+          <Link href="/shop" className="text-white flex items-center">
+            <ShoppingBag />
+            <span className="ml-2">Shop</span>
+          </Link>
+          <CartDropdown />
+        </nav>
+
+        <div className="flex items-center">
+          <SidebarTrigger className="text-white" />
+          <span className="ml-2 text-white">View Analytics</span>
+        </div>
+
         {!hydrated ? null : userId ? (
           <div ref={dropdownRef} className="relative">
             <button
@@ -101,18 +108,14 @@ export default function Header() {
                 </button>
               </div>
             )}
-            <SidebarTrigger />
           </div>
         ) : (
-          <>
-            <Link
-              href="/signup"
-              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
-            >
-              Log In
-            </Link>
-            <SidebarTrigger />
-          </>
+          <Link
+            href="/signup"
+            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+          >
+            Log In
+          </Link>
         )}
       </div>
     </header>

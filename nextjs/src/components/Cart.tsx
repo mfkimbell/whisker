@@ -42,13 +42,13 @@ export default function CartDropdown() {
 
   return (
     <div ref={ref} className="relative">
-       
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative p-2 cursor-pointer"
+        className="relative p-2 cursor-pointer flex items-center"
         aria-label="Toggle cart"
       >
         <ShoppingCart size={20} className="text-white" />
+        <span className="ml-2 text-white">View Cart</span>
         {items.length > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full px-1 text-xs">
             {items.length}
