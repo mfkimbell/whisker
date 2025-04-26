@@ -81,7 +81,9 @@ export function SidebarInterceptor() {
     <Sidebar className="z-50">
       <SidebarHeader>
         <div className="flex items-center justify-between p-4">
-          <h2 className="text-xl font-semibold">Whisker Analytics 🐈</h2>
+          <h3 className="text-xl font-semibold font-black">
+            Whisker Analytics 🐈
+          </h3>
         </div>
       </SidebarHeader>
 

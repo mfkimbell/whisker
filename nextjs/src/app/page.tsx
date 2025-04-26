@@ -98,12 +98,12 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/shop">
-                <button className="bg-black text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-gray-800 transition shadow-md">
+                <button className="bg-black text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-gray-800 transition shadow-md cursor-pointer">
                   Shop Products
                 </button>
               </Link>
               <Link href="/blog">
-                <button className="bg-white text-amber-700 px-8 py-3 rounded-full text-lg font-medium hover:bg-gray-100 transition shadow-md">
+                <button className="bg-white text-amber-700 px-8 py-3 rounded-full text-lg font-medium hover:bg-orange-200 transition shadow-md cursor-pointer">
                   Read Our Blog
                 </button>
               </Link>

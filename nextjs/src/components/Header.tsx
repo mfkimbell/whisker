@@ -53,11 +53,14 @@ export default function Header() {
           />
         </Link>
         <nav className="flex items-center space-x-4">
-          <Link href="/blog">Blog</Link>
-          <Link href="/shop">Shop</Link>
+          <Link href="/blog" className="hover:text-white">
+            Blog
+          </Link>
+          <Link href="/shop" className="hover:text-white">
+            Shop
+          </Link>
           <CartDropdown />
         </nav>
-        <SidebarTrigger />
       </div>
 
       {/* Right: Auth state (hydrated only) */}
@@ -100,14 +103,18 @@ export default function Header() {
                 </button>
               </div>
             )}
+            <SidebarTrigger />
           </div>
         ) : (
-          <Link
-            href="/signup"
-            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
-          >
-            Log In
-          </Link>
+          <>
+            <Link
+              href="/signup"
+              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+            >
+              Log In
+            </Link>
+            <SidebarTrigger />
+          </>
         )}
       </div>
     </header>

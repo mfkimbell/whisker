@@ -122,3 +122,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+h2:after {
+  content: "";
+  display: block;
+  width: calc(100% + 20px);
+  height: 3px;
+  background: linear-gradient(to right, #ff8c00, #ffa500);
+  transform: skew(-20deg);
+}
