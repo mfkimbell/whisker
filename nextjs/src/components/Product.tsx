@@ -117,18 +117,6 @@ export const Product = ({ product }: ProductProps) => {
                 </span>
               )}
             </div>
-            {product.autoshipPrice && (
-              <div className="flex items-center gap-1 text-sm">
-                <span className="font-semibold text-amber-600">
-                  ${product.autoshipPrice}
-                </span>
-                <img
-                  src="/autoship.svg"
-                  alt="Autoship"
-                  className="h-4 w-auto"
-                />
-              </div>
-            )}
           </div>
 
           {/* spacer pushes button to bottom if card height varies */}
