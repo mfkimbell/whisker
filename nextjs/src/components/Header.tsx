@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import { useHasHydrated } from '@/app/hooks/useHasHydrated';
-import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import CartDropdown from './Cart';
-import { clearUser } from '@/lib/slices/authSlice';
-import type { RootState, AppDispatch } from '@/lib/store';
-import Image from 'next/image';
+import { useHasHydrated } from "@/app/hooks/useHasHydrated";
+import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import CartDropdown from "./Cart";
+import { clearUser } from "@/lib/slices/authSlice";
+import type { RootState, AppDispatch } from "@/lib/store";
+import Image from "next/image";
+import { SidebarTrigger } from "./ui/sidebar";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,17 +23,21 @@ export default function Header() {
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (open && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        open &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
   }, [open]);
 
   function handleSignOut() {
     dispatch(clearUser());
-    router.push('/');
+    router.push("/");
   }
 
   return (
@@ -40,13 +45,19 @@ export default function Header() {
       {/* Left: Logo + Nav */}
       <div className="flex items-center space-x-4">
         <Link href="/">
-          <Image src="/whisker_white.png" alt="Whisker Logo" width={140} height={40} />
+          <Image
+            src="/whisker_white.png"
+            alt="Whisker Logo"
+            width={140}
+            height={40}
+          />
         </Link>
         <nav className="flex items-center space-x-4">
           <Link href="/blog">Blog</Link>
           <Link href="/shop">Shop</Link>
           <CartDropdown />
         </nav>
+        <SidebarTrigger />
       </div>
 
       {/* Right: Auth state (hydrated only) */}
@@ -57,9 +68,11 @@ export default function Header() {
               onClick={() => setOpen((o) => !o)}
               className="flex items-center space-x-2 focus:outline-none"
             >
-              <span className="hidden sm:inline text-sm font-medium">{name}</span>
+              <span className="hidden sm:inline text-sm font-medium">
+                {name}
+              </span>
               <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
-                {name ? name.charAt(0).toUpperCase() : 'U'}
+                {name ? name.charAt(0).toUpperCase() : "U"}
               </div>
             </button>
 

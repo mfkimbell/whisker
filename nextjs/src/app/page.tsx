@@ -1,79 +1,79 @@
-'use client';
-import React, { useEffect } from 'react';
-import Link from 'next/link';
-import { analytics } from '@/lib/segment';
-import Image from 'next/image';
+"use client";
+import React, { useEffect } from "react";
+import Link from "next/link";
+import { analytics } from "@/lib/segment";
+import Image from "next/image";
 
 export default function HomePage() {
   useEffect(() => {
-    analytics.page('Landing Page', {
-      title: 'Whisker Home',
-      category: 'landing',
+    analytics.page("Landing Page", {
+      title: "Whisker Home",
+      category: "landing",
     });
   }, []);
 
   const posts = [
     {
-      slug: 'kitten-care',
-      title: 'Kitten Care 101',
-      category: 'Adoption',
-      excerpt: 'Everything you need to welcome your new kitten.',
-      image: '/api/placeholder/600/400',
+      slug: "kitten-care",
+      title: "Kitten Care 101",
+      category: "Adoption",
+      excerpt: "Everything you need to welcome your new kitten.",
+      image: "/api/placeholder/600/400",
     },
     {
-      slug: 'cat-nutrition',
-      title: 'Cat Nutrition Hacks',
-      category: 'Care',
-      excerpt: 'Top tips to keep your cat healthy and happy.',
-      image: '/api/placeholder/600/400',
+      slug: "cat-nutrition",
+      title: "Cat Nutrition Hacks",
+      category: "Care",
+      excerpt: "Top tips to keep your cat healthy and happy.",
+      image: "/api/placeholder/600/400",
     },
     {
-      slug: 'cat-toys',
-      title: 'Best Interactive Cat Toys',
-      category: 'Products',
-      excerpt: 'Engage your cat with these stimulating toy options.',
-      image: '/api/placeholder/600/400',
+      slug: "cat-toys",
+      title: "Best Interactive Cat Toys",
+      category: "Products",
+      excerpt: "Engage your cat with these stimulating toy options.",
+      image: "/api/placeholder/600/400",
     },
     {
-      slug: 'grooming-guide',
-      title: 'Seasonal Grooming Guide',
-      category: 'Care',
-      excerpt: 'Keep your cat looking their best year-round.',
-      image: '/api/placeholder/600/400',
+      slug: "grooming-guide",
+      title: "Seasonal Grooming Guide",
+      category: "Care",
+      excerpt: "Keep your cat looking their best year-round.",
+      image: "/api/placeholder/600/400",
     },
   ];
 
   const products = [
     {
-      id: 'prod1',
-      name: 'Kitten Starter Kit',
-      category: 'Care',
+      id: "prod1",
+      name: "Kitten Starter Kit",
+      category: "Care",
       price: 49,
-      image: '/api/placeholder/400/400',
-      badge: 'Best Seller',
+      image: "/api/placeholder/400/400",
+      badge: "Best Seller",
     },
     {
-      id: 'prod2',
-      name: 'Auto Feeder Pro',
-      category: 'Care',
+      id: "prod2",
+      name: "Auto Feeder Pro",
+      category: "Care",
       price: 149,
-      image: '/api/placeholder/400/400',
-      badge: 'New',
+      image: "/api/placeholder/400/400",
+      badge: "New",
     },
     {
-      id: 'prod3',
-      name: 'Interactive Laser Toy',
-      category: 'Toys',
+      id: "prod3",
+      name: "Interactive Laser Toy",
+      category: "Toys",
       price: 29.99,
-      image: '/api/placeholder/400/400',
+      image: "/api/placeholder/400/400",
     },
     {
-      id: 'prod4',
-      name: 'Premium Cat Tree',
-      category: 'Furniture',
+      id: "prod4",
+      name: "Premium Cat Tree",
+      category: "Furniture",
       price: 199.99,
-      image: '/api/placeholder/400/400',
-      badge: 'Sale',
+      image: "/api/placeholder/400/400",
+      badge: "Sale",
     },
   ];
 
@@ -85,11 +85,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
           <div className="py-20 md:py-28 flex flex-col items-center text-center">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-md">
-              <Image src="/welcome_to_whisker.png" alt="Whisker Logo" width={440} height={40} />
+              <Image
+                src="/welcome_to_whisker.png"
+                alt="Whisker Logo"
+                width={440}
+                height={40}
+              />
             </h1>
             <p className="text-xl md:text-2xl max-w-2xl mb-10">
-              Your one-stop for expert cat care guides, subscription food plans, premium toys &amp;
-              more.
+              Your one-stop for expert cat care guides, subscription food plans,
+              premium toys &amp; more.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/shop">
@@ -112,7 +117,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl font-bold">Latest Articles</h2>
-            <Link href="/blog" className="text-amber-700 font-medium hover:underline">
+            <Link
+              href="/blog"
+              className="text-amber-700 font-medium hover:underline"
+            >
               View all articles →
             </Link>
           </div>
@@ -134,8 +142,12 @@ export default function HomePage() {
                   </div>
                   <div className="p-5 flex-grow flex flex-col">
                     <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-                    <p className="text-gray-600 mb-4 flex-grow">{post.excerpt}</p>
-                    <span className="text-amber-700 font-medium">Read more →</span>
+                    <p className="text-gray-600 mb-4 flex-grow">
+                      {post.excerpt}
+                    </p>
+                    <span className="text-amber-700 font-medium">
+                      Read more →
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -149,7 +161,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl font-bold">Featured Products</h2>
-            <Link href="/shop" className="text-amber-700 font-medium hover:underline">
+            <Link
+              href="/shop"
+              className="text-amber-700 font-medium hover:underline"
+            >
               Shop all products →
             </Link>
           </div>
@@ -173,9 +188,13 @@ export default function HomePage() {
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-bold mb-1">{product.name}</h3>
-                    <p className="text-gray-500 text-sm mb-2">Category: {product.category}</p>
+                    <p className="text-gray-500 text-sm mb-2">
+                      Category: {product.category}
+                    </p>
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">${product.price}</span>
+                      <span className="text-lg font-bold">
+                        ${product.price}
+                      </span>
                       <button className="bg-amber-600 text-white px-4 py-2 rounded-full text-sm hover:bg-amber-700 transition">
                         Add to Cart
                       </button>
