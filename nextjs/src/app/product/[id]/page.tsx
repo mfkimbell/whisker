@@ -9,6 +9,7 @@ import { addItem } from "@/lib/slices/cartSlice";
 import { AppDispatch } from "@/lib/store";
 import { v4 as uuidv4 } from "uuid";
 import { products } from "@/lib/data/products";
+import { ProductPage as ProductPageComponent } from "@/components/ProductPage";
 
 // Mock catalog
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,24 +82,16 @@ export default function ProductPage() {
   if (!product) return <p>Loading…</p>;
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">{product.name}</h1>
-      <p className="text-lg">${product.price.toFixed(2)}</p>
-
-      <div className="flex space-x-4">
-        <button
-          onClick={handleAddToCart}
-          className="px-4 py-2 bg-amber-700 text-white rounded hover:bg-amber-800 transition"
-        >
-          Add to Cart
-        </button>
-
-        <button
-          onClick={handleBuyNow}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-        >
-          Buy Now
-        </button>
+    <div className="h-full mx-2 px-4 py-8">
+      <div className="flex gap-8 h-full">
+        <ProductPageComponent.ProductImage path={product.image} />
+        <div className="w-full h-full">
+          <ProductPageComponent.ProductInformation product={product} />
+          <ProductPageComponent.ProductActions
+            onAddToCart={handleAddToCart}
+            onBuyNow={handleBuyNow}
+          />
+        </div>
       </div>
     </div>
   );
