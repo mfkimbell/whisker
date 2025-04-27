@@ -1,18 +1,59 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { analytics } from "@/lib/segment";
 import Image from "next/image";
 import { posts, products } from "@/lib/data/products";
 import { Product } from "@/components/Product";
 
+// Helper to get N random items from an array (no duplicates)
+function sample<T>(arr: T[], n: number): T[] {
+  const copy = [...arr];
+  const out: T[] = [];
+  while (out.length < n && copy.length) {
+    const idx = Math.floor(Math.random() * copy.length);
+    out.push(copy.splice(idx, 1)[0]);
+  }
+  return out;
+}
+
 export default function HomePage() {
+
+  const [featured, setFeatured] = useState(products.slice(0, 4));
+
+
   useEffect(() => {
-    analytics.page("Landing Page", {
-      title: "Whisker Home",
-      category: "landing",
-    });
+    (async () => {
+      // 1️⃣ Wait for the Analytics-Next SDK to be ready
+      const [ajs] = await analytics;
+  
+      // 2️⃣ Track the page view
+      ajs.page('Landing Page', { title: 'Whisker Home', category: 'landing' });
+  
+      // 3️⃣ Read the FavoriteCategory trait (if any)
+      const fav = (ajs.user().traits() as Record<string, unknown>)?.[
+        'FavoriteCategory'
+      ] as string | undefined;
+      console.log('[HomePage] FavoriteCategory trait =', fav);
+  
+      // 4️⃣ Build the featured-product list
+      let chosen: typeof products = fav
+        ? products.filter((p) => p.category === fav)
+        : [];
+  
+      if (chosen.length < 4) {
+        const fillers = sample(
+          products.filter((p) => !chosen.includes(p)),
+          4 - chosen.length
+        );
+        chosen = [...chosen, ...fillers];
+      }
+  
+      // 5️⃣ Keep exactly four and update state
+      setFeatured(chosen.slice(0, 4));
+    })();
   }, []);
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-white text-black">
@@ -94,7 +135,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.slice(0, 4).map((product) => (
+            {featured.map((product) => (
               <Product key={product.id} product={product} />
             ))}
           </div>
