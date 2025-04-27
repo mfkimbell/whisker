@@ -13,7 +13,6 @@ import useTracking from "@/app/hooks/useTracking";
 import { RootState } from "@/lib/store";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
-import { trackEvent } from "@/lib/segment-server";
 
 type AnalyticsInfo = {
   userId?: string;
