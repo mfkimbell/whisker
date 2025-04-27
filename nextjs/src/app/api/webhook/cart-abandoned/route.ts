@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   }
 
   // Send cart reminder via Twilio Conversation
-  const reminder = `You left items in cart ${cartId}. Let me know if you want to check out!`;
+  const reminder = `Whoops! Looks like you left items in your cart. 🛒 You can finish checking out here: https://whisker-omega.vercel.app/`;
   console.log(
     `✉️ Sending cart reminder to ${user.conversationSid}: "${reminder}"`
   );
