@@ -1,37 +1,85 @@
+// src/lib/data/posts.ts
+
+
 export const posts = [
   {
+    /* ---------- Adoption ---------- */
     slug: "kitten-care",
     title: "Kitten Care 101",
     category: "Adoption",
     excerpt: "Everything you need to welcome your new kitten.",
     image: "/adoption.png",
     date: "2024-01-01",
+
+    /* NEW FIELDS */
+    author: "Dr. Whiskers Purrington",
+    readTime: "6 min read",
+    content: [
+      "Welcoming a new kitten into your home is equal parts exciting and nerve-wracking. From litter-box training to the first vet visit, there’s a lot to tackle in the early weeks.",
+      "Start by creating a safe zone: a small room with food, water, litter, and cozy bedding. Limiting space helps kittens learn where essentials are and prevents accidents.",
+      "Socialization is your secret weapon. Handle your kitten gently every day, introduce new sounds (vacuum, doorbell), and reward curiosity with treats. This builds confidence and reduces future anxiety.",
+      "Finally, book that first veterinary appointment within 72 hours of adoption. Your vet will check for parasites, begin vaccinations, and microchip your new friend for lifelong identification."
+    ]
   },
   {
+    /* ---------- Food ---------- */
     slug: "cat-nutrition",
     title: "Cat Nutrition Hacks",
     category: "Food",
     excerpt: "Top tips to keep your cat healthy and happy.",
     image: "/nutrition.png",
     date: "2024-01-01",
+
+    /* NEW FIELDS */
+    author: "Chef Mewsli",
+    readTime: "5 min read",
+    content: [
+      "Cats are obligate carnivores, which means protein isn’t just a preference—it’s a requirement. The trick is balancing protein quality with essential micronutrients like taurine.",
+      "Rotate flavors to prevent boredom, but do it gradually. Sudden switches upset digestion. A three-day mix-in schedule (25 % new, 75 % old → 50/50 → 75/25) works wonders.",
+      "Consider adding a tablespoon of water to each meal. Extra moisture supports kidney health, especially for cats that ignore the water fountain.",
+      "Finally, treats should be no more than 10 % of daily calories. Opt for freeze-dried single-ingredient options over carbohydrate-laden biscuits."
+    ]
   },
   {
+    /* ---------- Toys ---------- */
     slug: "cat-toys",
     title: "Best Interactive Cat Toys",
     category: "Toys",
     excerpt: "Engage your cat with these stimulating toy options.",
     image: "/toy.png",
     date: "2024-01-01",
+
+    /* NEW FIELDS */
+    author: "Luna the Play-Expert",
+    readTime: "4 min read",
+    content: [
+      "Interactive toys turn a bored sofa-panther into an agile hunter. Look for motion-activated gadgets that mimic unpredictable prey movement.",
+      "Wand toys are budget-friendly classics. Vary the speed and height to keep your cat guessing, then let them ‘win’ at the end to avoid frustration.",
+      "Puzzle feeders accomplish two goals: mental enrichment and portion control. Start with low-difficulty models and level up as your cat masters each design.",
+      "Rotate toys weekly. A simple storage bin labeled ‘toy library’ helps you remember what’s on deck, ensuring each play session feels fresh."
+    ]
   },
   {
+    /* ---------- Care ---------- */
     slug: "grooming-guide",
     title: "Seasonal Grooming Guide",
     category: "Care",
     excerpt: "Keep your cat looking their best year-round.",
     image: "/brush.png",
     date: "2024-01-01",
-  },
+
+    /* NEW FIELDS */
+    author: "Fur-mom Astoria",
+    readTime: "7 min read",
+    content: [
+      "Spring shedding season means daily brushing. Use a slicker brush to remove the woolly undercoat before it blankets your sofa.",
+      "Summer calls for paw checks: asphalt can reach blistering temps. A quick tactile test—back of your hand on the pavement for 5 seconds—tells you if it’s safe.",
+      "Autumn is the ideal time to schedule a dental cleaning. Holiday treats are around the corner, and a clean mouth helps prevent tartar buildup.",
+      "Winter humidity drops can cause static shocks. Lightly mist a grooming glove with water or a cat-safe conditioning spray to keep fur smooth."
+    ]
+  }
 ];
+
 
 // Updated product data with detailed paragraph descriptions
 export const products = [
