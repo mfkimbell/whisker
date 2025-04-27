@@ -3,15 +3,10 @@
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { analytics } from '@/lib/segment';
+import {posts} from '@/lib/data/products'
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const posts: Record<string, any> = {
-  'kitten-care': { id: 'post1', title: 'Kitten Care 101', category: 'Adoption' },
-  'cat-nutrition': { id: 'post2', title: 'Cat Nutrition Hacks', category: 'Care' },
-};
-
-export default async function BlogPost() {
+export default function BlogPost() {
   const { slug } = useParams();
   const slugStr = Array.isArray(slug) ? slug[0] : slug ?? '';
 
