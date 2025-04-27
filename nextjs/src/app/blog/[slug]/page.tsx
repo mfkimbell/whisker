@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { analytics } from '@/lib/segment';
-import { prisma } from '@/lib/db';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const posts: Record<string, any> = {
@@ -13,34 +13,42 @@ const posts: Record<string, any> = {
 
 export default async function BlogPost() {
   const { slug } = useParams();
-  const slugStr = Array.isArray(slug) ? slug[0] : (slug ?? 'unknown');
-  const post = posts[slugStr] || { id: slugStr, title: slugStr, category: 'General' };
-  const user = await analytics.user();
-  console.log("user", user)
-  const phone = process.env.MITCH_WHATSAPP_NUMBER
+  const slugStr = Array.isArray(slug) ? slug[0] : slug ?? '';
 
-  let user2 = await prisma.user.findUnique({
-    where: { phone },
-  });
-  console.log("user2", user2)
+
+  const post = posts.find((p: any) => p.slug === slugStr) ?? {
+    slug:    slugStr,
+    title:   slugStr.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+    category: 'General',
+    excerpt:  '',
+    image:    '',
+    date:     new Date().toISOString().slice(0, 10),
+  };
 
   useEffect(() => {
-    analytics.track('Viewed Blog Post', {
-      postId: post.id,
-      title: post.title,
-      category: post.category,
-    });
-    
+    console.log('[BlogPost] useEffect triggered for slug:', slugStr);
+    console.log('[BlogPost] post data:', post);
 
-    // analytics.identify(userId, {
-    //   email,
-    //   phone,
-    //   phoneVerified: false,
-    //   smsOptIn: false,
-    // });
-    analytics.track('Signed Up', { method: 'email+phone' });
-    
-  }, [post.id]);
+    (async () => {
+      console.log('[BlogPost] awaiting analytics SDK…');
+      const [ajs] = await analytics;
+      console.log('[BlogPost] analytics SDK ready:', ajs);
+
+      console.log('[BlogPost] sending "Viewed Blog Post" event');
+      ajs.track('Viewed Blog Post', {
+        postId:   post.slug,
+        title:    post.title,
+        category: post.category,
+      });
+      console.log('[BlogPost] "Viewed Blog Post" tracked');
+
+      console.log('[BlogPost] updating FavoriteCategory trait:', post.category);
+      ajs.identify({ FavoriteCategory: post.category });
+      console.log('[BlogPost] identify() complete');
+    })();
+  }, [post.slug, post.title, post.category]);
+
+  
 
   return (
     <div>
