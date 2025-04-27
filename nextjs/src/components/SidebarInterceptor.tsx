@@ -10,30 +10,15 @@ import {
 } from "@/components/ui/sidebar";
 import { analytics } from "@/lib/segment";
 import useTracking from "@/app/hooks/useTracking";
-import { RootState} from "@/lib/store";
-import { useSelector} from "react-redux";
+import { RootState } from "@/lib/store";
+import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
-
+import { trackEvent } from "@/lib/segment-server";
 
 type AnalyticsInfo = {
   userId?: string;
   anonymousId?: string;
   traits?: Record<string, any>;
-};
-
-type PageEvent = {
-  type: string;
-  name: string;
-  timestamp: string;
-  anonymousId: string;
-  messageId: string;
-  event: string;
-  properties: {
-    path: string;
-    url: string;
-    title: string;
-    category: string;
-  };
 };
 
 export function SidebarInterceptor() {
@@ -46,11 +31,7 @@ export function SidebarInterceptor() {
 
   const trackingData = useTracking();
 
-  const eventPayloads = trackingData
-    .filter(
-      (event): event is { payload: { raw: PageEvent } } => "payload" in event
-    )
-    .map((event) => event.payload.raw);
+  const eventPayloads = trackingData;
 
   const [showFullMessageId, setShowFullMessageId] = useState<boolean[]>(
     Array(eventPayloads.length).fill(false)
@@ -75,10 +56,13 @@ export function SidebarInterceptor() {
   }, []);
 
   const handleCartAbandon = () => {
-    console.log("handleCartAbandon")
-    analytics.track("Cart Abandoned", { items });
-   
-  }
+    analytics.track("Cart Abandoned", {
+      title: "Cart Abandoned",
+      properties: { items },
+      type: "track",
+      timestamp: new Date().toISOString(),
+    });
+  };
 
   if (eventPayloads.length === 0) {
     return;
@@ -93,7 +77,9 @@ export function SidebarInterceptor() {
           </h3>
         </div>
       </SidebarHeader>
-      <Button className="m-4" onClick={handleCartAbandon}>Abandon Cart</Button>
+      <Button className="m-4" onClick={handleCartAbandon}>
+        Abandon Cart
+      </Button>
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
@@ -144,7 +130,7 @@ export function SidebarInterceptor() {
               {eventPayloads
                 .slice(-5)
                 .reverse()
-                .filter((event) => event.properties)
+                .filter((event) => event.obj.properties)
                 .map((event, idx) => (
                   <div
                     key={idx}
@@ -152,41 +138,41 @@ export function SidebarInterceptor() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-green-600 px-2 py-1 bg-green-50 rounded-md">
-                        {event.name || event.event}
+                        {event.obj.name || event.obj.event}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {new Date(event.timestamp).toLocaleTimeString()}
+                        {new Date(event.obj.timestamp).toLocaleTimeString()}
                       </span>
                     </div>
 
                     <div className="pt-2 border-t border-gray-200 text-xs space-y-1">
                       <div className="flex justify-between">
                         <span className="text-gray-500">Type:</span>
-                        <span className="font-mono">{event.type}</span>
+                        <span className="font-mono">{event.obj.type}</span>
                       </div>
 
-                      {event.properties.path && (
+                      {event.obj.properties.path && (
                         <div className="flex justify-between">
                           <span className="text-gray-500">Path:</span>
                           <span className="font-mono">
-                            {event.properties.path}
+                            {event.obj.properties.path}
                           </span>
                         </div>
                       )}
 
-                      {event.properties.category && (
+                      {event.obj.properties.category && (
                         <div className="flex justify-between">
                           <span className="text-gray-500">Category:</span>
-                          <span>{event.properties.category}</span>
+                          <span>{event.obj.properties.category}</span>
                         </div>
                       )}
 
                       <div className="flex justify-between">
                         <span className="text-gray-500">
-                          {event.properties.title ? "Title" : "Event"}
+                          {event.obj.properties.title ? "Title" : "Event"}
                         </span>
                         <span className="truncate max-w-32">
-                          {event.properties.title || event.event}
+                          {event.obj.properties.title || event.obj.event}
                         </span>
                       </div>
 
@@ -198,14 +184,14 @@ export function SidebarInterceptor() {
                         >
                           {showFullMessageId[idx]
                             ? "Show less"
-                            : `${event.messageId.slice(0, 8)}...`}
+                            : `${event.obj.messageId.slice(0, 8)}...`}
                         </span>
                       </div>
 
                       {showFullMessageId[idx] && (
                         <div className="flex mt-1">
                           <span className="font-mono text-xs bg-gray-100 p-1 rounded">
-                            {event.messageId}
+                            {event.obj.messageId}
                           </span>
                         </div>
                       )}

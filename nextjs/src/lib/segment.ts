@@ -5,14 +5,14 @@ export const analytics = AnalyticsBrowser.load({
   writeKey: "QGYxeIMTlFwyoviAgidLEyaVAq4oWltc",
 });
 
-analytics.addSourceMiddleware((event) => {
+analytics.addSourceMiddleware(({ payload, next }) => {
   const events = localStorage.getItem("segment_events");
   const parsedEvents = events ? JSON.parse(events) : [];
-  parsedEvents.push(event);
+  parsedEvents.push(payload);
 
-  if (event) {
+  if (payload) {
     localStorage.setItem("segment_events", JSON.stringify(parsedEvents));
   }
 
-  return undefined;
+  next(payload);
 });
