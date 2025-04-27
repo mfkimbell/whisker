@@ -61,8 +61,8 @@ export async function POST(request: Request) {
     `✉️ Sending cart reminder to ${user.conversationSid}: "${reminder}"`
   );
   try {
-    const msg = await sendConversationMessage(user.conversationSid, reminder);
-    console.log("✅ Reminder sent, SID=", msg.sid);
+    // const msg = await sendConversationMessage(user.conversationSid, reminder);
+    // console.log("✅ Reminder sent, SID=", msg.sid);
   } catch (sendErr: any) {
     console.error("❌ sendConversationMessage failed:", sendErr);
   }
