@@ -2,7 +2,9 @@
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
+import { BOT_NAME} from '@/lib/twilio';
+//import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
+
 import { identifyUser } from '@/lib/segment-server';
 
 export async function POST(request: Request) {
