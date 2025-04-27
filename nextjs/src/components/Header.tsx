@@ -66,7 +66,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center">
-          <SidebarTrigger className="text-white" />
+          <SidebarTrigger className="text-white"> </SidebarTrigger>
           <span className="ml-2 text-white">View Analytics</span>
         </div>
 
@@ -77,7 +77,7 @@ export default function Header() {
               className="flex items-center space-x-2 focus:outline-none"
             >
               
-              <div className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center">
                 {name ? name.charAt(0).toUpperCase() : "U"}
               </div>
             </button>
@@ -110,9 +110,9 @@ export default function Header() {
         ) : (
           <Link
             href="/signup"
-            className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+            className="bg-[#2F59D5] text-white px-4 py-2 rounded hover:bg-blue-800 transition cursor-pointer"
           >
-            Log In
+            Sign Up
           </Link>
         )}
       </div>
