@@ -41,7 +41,7 @@ export default function CartDropdown() {
 
     setOpen(false);
     toast.success(
-      "Congrats on making your purchase! Your order will be shipped soon."
+      "Congrats on making your purchase! Your order will be shipped soon.", { autoClose: 1500 }
     );
   };
 

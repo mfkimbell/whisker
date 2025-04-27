@@ -44,7 +44,7 @@ export const Product = ({ product }: ProductProps) => {
       })
     );
 
-    toast.success(`Added ${product.name} to Cart`, { autoClose: 3500 });
+    toast.success(`Added ${product.name} to Cart`, { autoClose: 1500 });
   }
 
   return (
