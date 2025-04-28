@@ -1,7 +1,7 @@
 import { Analytics } from '@segment/analytics-node';
 
 // Initialize Segment Analytics with the server-side write key
-const analytics = new Analytics({ writeKey: process.env.SEGMENT_WRITE_KEY! });
+const analytics = new Analytics({ writeKey: "QGYxeIMTlFwyoviAgidLEyaVAq4oWltc" });
 
 /**
  * Identify a user in Segment with given traits.
