@@ -47,7 +47,8 @@ export async function POST(request: Request) {
   } else if (authorIdentity === BOT_NAME) {
     console.log('ℹ️ Message came from bot; skipping');
   } else {
-    identifyUser(user.id, { smsOptIn: true })
+    
+    await identifyUser(user.id, { smsOptIn: true })
       .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
       .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
     
