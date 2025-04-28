@@ -1,4 +1,5 @@
 // src/app/api/verify/check/route.ts
+// checks to see if the user got the verification code correct
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { checkVerificationCode } from '@/lib/twilio';

@@ -1,4 +1,5 @@
 // app/api/verify/send/route.ts
+// sends a call to wtilio to generate a code and associates it with their phone number
 import { NextResponse } from 'next/server';
 import Twilio from 'twilio';
 
