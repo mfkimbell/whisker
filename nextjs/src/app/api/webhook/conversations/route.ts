@@ -47,21 +47,23 @@ export async function POST(request: Request) {
   } else if (authorIdentity === BOT_NAME) {
     console.log('ℹ️ Message came from bot; skipping');
   } else {
+    identifyUser(user.id, { smsOptIn: true })
+      .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
+      .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
     
     const reply = `Just welcomed a new kitten? 🐾 We'd love to help! Use promo code KITTENLOVE for 10% off any kitten-related products at checkout. Browse here: https://whisker-omega.vercel.app/`
     console.log(`✉️ Sending reply to ${user.conversationSid}: "${reply}"`);
     try {
       const msg = await sendConversationMessage(user.conversationSid, reply);
       console.log('✅ Reply sent, SID=', msg.sid);
+      
     } catch (sendErr: any) {
       console.error('❌ sendConversationMessage failed:', sendErr);
     }
 
     console.log("before user update")
 
-    identifyUser(user.id, { smsOptIn: true })
-      .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
-      .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
+    
   }
 
   return NextResponse.json({}, { status: 200 });
