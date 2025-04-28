@@ -48,9 +48,13 @@ export async function POST(request: Request) {
     console.log('ℹ️ Message came from bot; skipping');
   } else {
     
+    console.log("before user update")
+
     await identifyUser(user.id, { smsOptIn: true })
       .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
       .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
+    
+    console.log("after user update)")
     
     const reply = `Just welcomed a new kitten? 🐾 We'd love to help! Use promo code KITTENLOVE for 10% off any kitten-related products at checkout. Browse here: https://whisker-omega.vercel.app/`
     console.log(`✉️ Sending reply to ${user.conversationSid}: "${reply}"`);
@@ -62,7 +66,7 @@ export async function POST(request: Request) {
       console.error('❌ sendConversationMessage failed:', sendErr);
     }
 
-    console.log("before user update")
+   
 
     
   }

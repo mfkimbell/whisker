@@ -52,7 +52,7 @@ export function SidebarInterceptor() {
         traits: traits || {},
       })
     );
-  }, []);
+  }, [eventPayloads.length]);
 
   const handleCartAbandon = () => {
     analytics.track("Cart Abandoned", {
