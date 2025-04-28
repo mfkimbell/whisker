@@ -63,6 +63,13 @@ export function SidebarInterceptor() {
     });
   };
 
+  const handleSmsOptIn = async () => {
+    await analytics.identify(analyticsInfo.userId, { smsOptIn: true });
+  }
+  const handleSmsOptOut = async () => {
+    await analytics.identify(analyticsInfo.userId, { smsOptIn: false });
+  }
+
   if (eventPayloads.length === 0) {
     return;
   }
@@ -76,9 +83,15 @@ export function SidebarInterceptor() {
           </h3>
         </div>
       </SidebarHeader>
-      <Button className="m-4" onClick={handleCartAbandon}>
-        Abandon Cart
-      </Button>
+      <div className="flex flex-col gap-3 m-4">
+        <Button  onClick={handleCartAbandon}>Abandon Cart</Button>
+        <Button  onClick={handleSmsOptIn}>
+          SMS Opt-In
+        </Button>
+        <Button  onClick={handleSmsOptOut}>
+          SMS Opt-Out
+        </Button>
+      </div>
 
       <SidebarContent className="overflow-y-auto">
         <SidebarGroup>
