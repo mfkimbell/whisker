@@ -17,7 +17,6 @@ export default function CartDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // close on outside click
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (open && ref.current && !ref.current.contains(e.target as Node)) {

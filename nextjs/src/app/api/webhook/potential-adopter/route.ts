@@ -6,11 +6,8 @@ import { prisma } from "@/lib/db";
 
 export async function POST(request: Request) {
   console.log("🔔 /api/webhook/potential-adopter invoked");
-
-  // Determine content type
   const contentType = request.headers.get("content-type") || "";
   let phone: string | null = null;
-
 
   if (contentType.includes("application/json")) {
     try {
@@ -23,7 +20,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
   } else {
-    // Fallback to form-encoded data
     const raw = await request.text();
     console.log("📥 Raw body:", raw);
     const form = new URLSearchParams(raw);
@@ -31,13 +27,11 @@ export async function POST(request: Request) {
 
   }
 
-  // Validate required fields
   if (!phone){
     console.error("❌ Missing phone or cartId");
     return NextResponse.json({}, { status: 200 });
   }
 
-  // Normalize phone for lookup
   const normalizedPhone = phone.startsWith("+") ? phone : `+${phone}`;
   console.log("ℹ️ Looking up user by phone:", normalizedPhone);
 
@@ -55,7 +49,6 @@ export async function POST(request: Request) {
     return NextResponse.json({}, { status: 200 });
   }
 
-  // Send cart reminder via Twilio Conversation
   const reminder = `Just welcomed a new kitten? 🐾 We'd love to help! Use promo code KITTENLOVE for 10% off any kitten-related products at checkout. Browse here: https://whisker-omega.vercel.app/`;
   console.log(
     `✉️ Sending cart reminder to ${user.conversationSid}: "${reminder}"`
@@ -67,7 +60,5 @@ export async function POST(request: Request) {
     console.error("❌ sendConversationMessage failed:", sendErr);
   }
 
-
-  // Return success to prevent retries
   return NextResponse.json({ success: true }, { status: 200 });
 }

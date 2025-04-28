@@ -81,7 +81,6 @@ export const posts = [
 ];
 
 
-// Updated product data with detailed paragraph descriptions
 export const products = [
   /* ---------- FOOD ---------- */
   {

@@ -7,7 +7,6 @@ import { identifyUser } from "@/lib/segment-server";
 export async function POST(request: Request) {
   console.log("🔔 /api/webhook/cart-abandoned invoked");
 
-  // Determine content type
   const contentType = request.headers.get("content-type") || "";
   let phone: string | null = null;
   let cartId: string | null = null;
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
   } else {
-    // Fallback to form-encoded data
     const raw = await request.text();
     console.log("📥 Raw body:", raw);
     const form = new URLSearchParams(raw);
@@ -31,13 +29,11 @@ export async function POST(request: Request) {
     cartId = form.get("cartId");
   }
 
-  // Validate required fields
   if (!phone || !cartId) {
     console.error("❌ Missing phone or cartId");
     return NextResponse.json({}, { status: 200 });
   }
 
-  // Normalize phone for lookup
   const normalizedPhone = phone.startsWith("+") ? phone : `+${phone}`;
   console.log("ℹ️ Looking up user by phone:", normalizedPhone);
 
@@ -55,7 +51,6 @@ export async function POST(request: Request) {
     return NextResponse.json({}, { status: 200 });
   }
 
-  // Send cart reminder via Twilio Conversation
   const reminder = `Whoops! Looks like you left items in your cart. 🛒 You can finish checking out here: https://whisker-omega.vercel.app/`;
   console.log(
     `✉️ Sending cart reminder to ${user.conversationSid}: "${reminder}"`
@@ -67,9 +62,7 @@ export async function POST(request: Request) {
     console.error("❌ sendConversationMessage failed:", sendErr);
   }
 
-  // Track the event in Segment
   identifyUser(user.id, { cartAbandoned: cartId });
 
-  // Return success to prevent retries
   return NextResponse.json({ success: true }, { status: 200 });
 }

@@ -25,7 +25,6 @@ export default function VerifyPage() {
     sendCode();
   }, [phone]);
 
-  // Send or resend the verification code
   async function sendCode() {
     if (!phone) return;
     setSending(true);
@@ -46,7 +45,6 @@ export default function VerifyPage() {
     }
   }
 
-  // Handle form submit: verify OTP, queue background work, then redirect
   async function handleVerify(e: React.FormEvent) {
     e.preventDefault();
     if (!userId || !phone) {
@@ -56,7 +54,6 @@ export default function VerifyPage() {
     setSending(true);
 
     try {
-      // 1) Quick verify + DB update
       const res = await fetch('/api/verify/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +68,6 @@ export default function VerifyPage() {
 
       const { conversationSid, userId: returnedUserId, phone: returnedPhone } = data;
 
-      // 2) Analytics + Redux
       analytics.identify(returnedUserId, { phoneVerified: true });
       analytics.track('Phone Verified');
       dispatch(
@@ -83,7 +79,6 @@ export default function VerifyPage() {
         }),
       );
 
-       // 3) Fire-and-forget background work
        void fetch('/api/verify/post-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,8 +88,6 @@ export default function VerifyPage() {
         }),
       });
     
-
-      // 4) Redirect to home
       router.push('/');
     } catch (err) {
       console.error('Verification failed:', err);

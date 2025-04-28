@@ -24,19 +24,15 @@ export default function HomePage() {
 
   useEffect(() => {
     (async () => {
-      // 1️⃣ Wait for the Analytics-Next SDK to be ready
       const [ajs] = await analytics;
   
-      // 2️⃣ Track the page view
       ajs.page('Landing Page', { title: 'Whisker Home', category: 'landing' });
   
-      // 3️⃣ Read the FavoriteCategory trait (if any)
       const fav = (ajs.user().traits() as Record<string, unknown>)?.[
         'FavoriteCategory'
       ] as string | undefined;
       console.log('[HomePage] FavoriteCategory trait =', fav);
   
-      // 4️⃣ Build the featured-product list
       let chosen: typeof products = fav
         ? products.filter((p) => p.category === fav)
         : [];
@@ -49,7 +45,6 @@ export default function HomePage() {
         chosen = [...chosen, ...fillers];
       }
   
-      // 5️⃣ Keep exactly four and update state
       setFeatured(chosen.slice(0, 4));
     })();
   }, []);
@@ -141,8 +136,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* You can apply similar fixes to Testimonials, Newsletter, and Footer sections if they include quotes */}
     </div>
   );
 }

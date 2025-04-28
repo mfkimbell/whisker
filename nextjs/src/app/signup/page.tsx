@@ -16,11 +16,9 @@ export default function SignupPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // capture the anonymousId for later (optional)
     const user = await analytics.user();
     const anonymousId = user.anonymousId();
 
-    // create the user record in your backend
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -43,13 +41,11 @@ export default function SignupPage() {
 
     const myPhone = '+12053128982';
 
-    // store in Redux for cross‐page use
     dispatch(setUser({ userId, phone: myPhone, name }));
     localStorage.setItem('userId', userId);
     localStorage.setItem('phone', phone);
     localStorage.setItem('name', name);
 
-    // navigate to verification step
     router.push('/verify');
   }
 

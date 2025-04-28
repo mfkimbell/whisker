@@ -8,18 +8,15 @@ import { identifyUser } from '@/lib/segment-server';
 
 export async function POST(request: Request) {
   console.log('🔔 /api/webhook/conversations invoked');
-
-  // 1) Grab raw body & parse
   const raw = await request.text();
   console.log('📥 Raw body:', raw);
   const form = new URLSearchParams(raw);
-  const incoming = form.get('From'); // e.g. "whatsapp:+12053128982"
+  const incoming = form.get('From'); 
   const body = form.get('Body')?.trim();
   const authorIdentity = form.get('ProfileName') || '';
 
   console.log('📑 Parsed fields:', { incoming, body, authorIdentity });
 
-  // 2) Normalize phone and lookup user
   if (!incoming) {
     console.error('❌ No From field in payload—cannot identify user');
     return NextResponse.json({}, { status: 200 });
@@ -41,7 +38,6 @@ export async function POST(request: Request) {
     return NextResponse.json({}, { status: 200 });
   }
 
-  // 3) Only echo real user messages
   if (!body) {
     console.log('ℹ️ Empty body; nothing to reply');
   } else if (authorIdentity === BOT_NAME) {
@@ -56,12 +52,10 @@ export async function POST(request: Request) {
       console.error('❌ sendConversationMessage failed:', sendErr);
     }
 
-    // 3b) Mark smsOptIn in Segment (fire-and-forget)
     identifyUser(user.id, { smsOptIn: true })
       .then(() => console.log('✅ smsOptIn updated in Segment for', user.id))
       .catch((segErr: any) => console.error('❌ Failed to update smsOptIn in Segment:', segErr));
   }
 
-  // 4) Tell Twilio “all good” so it won’t retry
   return NextResponse.json({}, { status: 200 });
 }

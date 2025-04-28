@@ -35,7 +35,7 @@ const useTracking = () => {
     };
   }, []);
 
-  return events; // Return the events
+  return events; 
 };
 
 export default useTracking;

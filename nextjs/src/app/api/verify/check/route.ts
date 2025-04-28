@@ -19,7 +19,6 @@ export async function POST(req: Request) {
     data: { phoneVerified: true },
   });
 
-  // return success + userId so client can enqueue background work
   return NextResponse.json({
     success: true,
     userId: user.id,

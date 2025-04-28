@@ -8,7 +8,6 @@ export const twilioClient = twilio(accountSid, authToken);
 const VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID!;
 const CONVERSATIONS_SERVICE_SID = process.env.TWILIO_CONVERSATIONS_SERVICE_SID!;
 
-// WhatsApp sandbox number (demo only)
 export const FROM_WHATSAPP = "whatsapp:+14155238886";
 export const BOT_NAME = "WhiskerAI";
 
@@ -58,13 +57,12 @@ export async function createConversationForUser(userId: string, phone: string) {
     `[Twilio] createConversationForUser → user=${userId}, address=${toWhatsApp}`
   );
 
-  // 1) List all existing conversations
   const convs = await twilioClient.conversations.v1
     .services(CONVERSATIONS_SERVICE_SID)
     .conversations.list();
   console.log(`[Twilio] Found ${convs.length} conversations`);
 
-  // 2) Delete any old ones for this number
+  // deleting existing conversations associated with user
   await Promise.all(
     convs.map(async (conv) => {
       const parts = await twilioClient.conversations.v1
@@ -90,7 +88,6 @@ export async function createConversationForUser(userId: string, phone: string) {
     })
   );
 
-  // 3) Create a new conversation
   const conv = await twilioClient.conversations.v1
     .services(CONVERSATIONS_SERVICE_SID)
     .conversations.create({

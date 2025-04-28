@@ -8,10 +8,8 @@ export async function POST(request: Request) {
     if (!phone) {
       return NextResponse.json({ error: 'Phone is required' }, { status: 400 });
     }
-    // normalize to E.164
     const formattedPhone = phone.startsWith('+') ? phone : `+${phone}`;
 
-    // find or create the user
     let user = await prisma.user.findUnique({
       where: { phone: formattedPhone },
     });
@@ -27,7 +25,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // return the id so the client can dispatch it into Redux
     return NextResponse.json({ userId: user.id });
   } catch (err: any) {
     console.error('Error in /api/signup:', err);
