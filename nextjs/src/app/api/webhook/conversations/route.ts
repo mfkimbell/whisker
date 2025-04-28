@@ -1,5 +1,7 @@
 // src/app/api/webhook/conversations/route.ts
 
+// in retrospect, this would be better named "sms-opt-in"
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { BOT_NAME, sendConversationMessage } from '@/lib/twilio';
@@ -38,11 +40,14 @@ export async function POST(request: Request) {
     return NextResponse.json({}, { status: 200 });
   }
 
-  if (!body) {
-    console.log('ℹ️ Empty body; nothing to reply');
+  // Opt-in only when the user explicitly replies “YES” (any casing).
+  if (!body || !/^yes$/i.test(body)) {
+    console.log('ℹ️ Non-opt-in message received; ignoring');
+    return NextResponse.json({}, { status: 200 });
   } else if (authorIdentity === BOT_NAME) {
     console.log('ℹ️ Message came from bot; skipping');
   } else {
+    
     const reply = `Just welcomed a new kitten? 🐾 We'd love to help! Use promo code KITTENLOVE for 10% off any kitten-related products at checkout. Browse here: https://whisker-omega.vercel.app/`
     console.log(`✉️ Sending reply to ${user.conversationSid}: "${reply}"`);
     try {

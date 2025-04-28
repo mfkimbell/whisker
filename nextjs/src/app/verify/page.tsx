@@ -1,4 +1,8 @@
 // src/app/verify/page.tsx
+
+// This is all about verifying we have the right phone
+// the NEXT STEP is verifiying we are sms opt in, and that is with the YES webhook
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
