@@ -9,7 +9,7 @@ export const posts = [
     category: "Adoption",
     excerpt: "Everything you need to welcome your new kitten.",
     image: "/adoption.png",
-    date: "2024-01-01",
+    date: "2023-01-07",
 
     /* NEW FIELDS */
     author: "Dr. Whiskers Purrington",
@@ -28,7 +28,7 @@ export const posts = [
     category: "Food",
     excerpt: "Top tips to keep your cat healthy and happy.",
     image: "/nutrition.png",
-    date: "2024-01-01",
+    date: "2024-06-29",
 
     /* NEW FIELDS */
     author: "Chef Mewsli",
@@ -47,7 +47,7 @@ export const posts = [
     category: "Toys",
     excerpt: "Engage your cat with these stimulating toy options.",
     image: "/toy.png",
-    date: "2024-01-01",
+    date: "2022-05-06",
 
     /* NEW FIELDS */
     author: "Luna the Play-Expert",
@@ -66,7 +66,7 @@ export const posts = [
     category: "Care",
     excerpt: "Keep your cat looking their best year-round.",
     image: "/brush.png",
-    date: "2024-01-01",
+    date: "2023-12-01",
 
     /* NEW FIELDS */
     author: "Fur-mom Astoria",
