@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     console.log('✉️ Sending opt-in message to conversation', convSid);
     const msg = await sendConversationMessage(
       convSid,
-      '🎉 Thanks for verifying! Reply *YES* here on WhatsApp to confirm cat tips & deals.',
+      '🎉 Welcome Jane! Thanks for verifying! Reply *YES* here on WhatsApp to confirm cat tips & deals.',
     );
     console.log('✅ Message sent, SID=', msg.sid);
 
