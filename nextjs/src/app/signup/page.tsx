@@ -1,4 +1,5 @@
 // app/signup/page.tsx
+// this is the page where we merge anonymous data and new user data
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
