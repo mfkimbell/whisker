@@ -49,7 +49,7 @@ export const Product = ({ product }: ProductProps) => {
 
   return (
     <Link key={product.id} href={`/product/${product.id}`}>
-      <div className="relative flex flex-col rounded-xl border bg-white shadow-sm hover:shadow-lg transition">
+      <div className="relative flex flex-col rounded-xl border bg-white shadow-sm hover:shadow-lg transition group overflow-hidden group-hover:ring-2 group-hover:ring-red-500">
         {/* badge (e.g. “Deal”) */}
         {product.badge && (
           <span className="absolute top-2 left-2 z-10 rounded bg-rose-700 px-2 py-0.5 text-xs font-semibold text-white">
@@ -63,7 +63,7 @@ export const Product = ({ product }: ProductProps) => {
             src={product.image}
             alt={`${product.brand} ${product.name}`}
             layout="fill"
-            className="object-contain p-6"
+            className="object-contain p-6 group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 1024px) 50vw, 25vw"
             priority
           />
