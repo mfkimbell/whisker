@@ -7,15 +7,15 @@
 
 
 ## Tools Used
-* Twilio Segment – customer-data platform: collects events, unifies user profiles, and routes them to any downstream tool for personalized engagement.
-* Twilio SendGrid – cloud email service: delivers transactional & marketing emails with templating, analytics, and high deliverability.
-* Twilio Conversations API – multi-channel messaging layer: builds 1-to-1 or group threads across SMS, WhatsApp, and chat with webhooks and history.
-* Twilio Flex – fully programmable cloud contact center: integrates voice, chat, SMS, and CRM data in a customizable agent desktop.
-* Twilio Verify – turnkey OTP service: generates and delivers one-time codes over SMS, email, or WhatsApp and handles fraud controls.
-* Vercel – serverless hosting & CI/CD platform optimized for frontend frameworks with global edge network and instant rollbacks.
-* NextJS – React meta-framework that adds file-based routing, API routes, SSR/SSG, and edge functions for full-stack web apps.
-* Neon Postgres – serverless Postgres with branchable databases, autoscaling, and a generous free tier, ideal for modern cloud apps.
-* Redux – predictable state-management library for JavaScript/React apps, using a single global store and pure reducer function*
+* `Twilio Segment` – customer-data platform: collects events, unifies user profiles, and routes them to any downstream tool for personalized engagement.
+* `Twilio SendGrid` – cloud email service: delivers transactional & marketing emails with templating, analytics, and high deliverability.
+* `Twilio Conversations API` – multi-channel messaging layer: builds 1-to-1 or group threads across SMS, WhatsApp, and chat with webhooks and history.
+* `Twilio Flex` – fully programmable cloud contact center: integrates voice, chat, SMS, and CRM data in a customizable agent desktop.
+* `Twilio Verify` – turnkey OTP service: generates and delivers one-time codes over SMS, email, or WhatsApp and handles fraud controls.
+* `Vercel` – serverless hosting & CI/CD platform optimized for frontend frameworks with global edge network and instant rollbacks.
+* `NextJS` – React meta-framework that adds file-based routing, API routes, SSR/SSG, and edge functions for full-stack web apps.
+* `Neon Postgres` – serverless Postgres with branchable databases, autoscaling, and a generous free tier, ideal for modern cloud apps.
+* `Redux` – predictable state-management library for JavaScript/React apps, using a single global store and pure reducer function*
 
 
 #### Features
