@@ -3,6 +3,12 @@
 Deployed Live at: https://whisker-omega.vercel.app/
 
 ## Demo: Whisker is a cat product company trying to convince blog viewers to buy more products
+The app uses <b>NextJS</b> made to show off Twilio segment and communication tools. Whisker is a Direct to Customer cat product sales company with a blog.
+             It uses <b>Twilio Verify</b> to authenticate users with Two Factor Authentication.
+            It tracks user data on <b>Twilio Segment</b> and uses that data to
+            target the users with personalized ads, messages using <b>Twilio Conversations APO</b>, and emails using <b>Twilio SendGrid</b>.
+            Advertisements updates in real time based on users tracked viewed categories. Finally,
+            it allows for the user to contact a live agent using <b>Twilio Flex</b>. 
 
 <img width="2531" alt="arch3" src="https://github.com/user-attachments/assets/053c661f-f733-429c-9f38-da381201709f" />
 
@@ -18,6 +24,7 @@ Deployed Live at: https://whisker-omega.vercel.app/
 * `NextJS` – React meta-framework that adds file-based routing, API routes, SSR/SSG, and edge functions for full-stack web apps.
 * `Neon Postgres` – serverless Postgres with branchable databases, autoscaling, and a generous free tier, ideal for modern cloud apps.
 * `Redux` – predictable state-management library for JavaScript/React apps, using a single global store and pure reducer function*
+* `Prisma` - Object Relational mapper for javascript. Used to manage database updates without raw sql. 
 
 
 #### Features
